@@ -100,21 +100,73 @@ jobs:
               lines.append(f"{payload_manifest[name]['sha256']}  patches/v0.01/{name}")
           checksum_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
+          Path("release_zip_sha256.txt").write_text(zip_sha + "\n", encoding="ascii")
           print(f"Release ZIP: {zip_path}")
           print(f"Release ZIP SHA-256: {zip_sha}")
 
-      - name: Create GitHub Release v0.01
+      - name: Create or verify GitHub Release v0.01
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TARGET: a9a0ddf7bd0059751178dd062620d7209f4581e6
         run: |
           if gh release view v0.01 >/dev/null 2>&1; then
-            echo "Release v0.01 already exists; refusing to overwrite it."
-            exit 1
+            echo "Release v0.01 already exists; refreshing notes and verified assets."
+            gh release edit v0.01 \
+              --title "v0.01 — Pre-Game Translation Milestone" \
+              --notes-file release-notes/v0.01.md
+            gh release upload v0.01 \
+              Kancolle_Kai_CHS_v0.01.zip \
+              Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt \
+              --clobber
+          else
+            gh release create v0.01 \
+              Kancolle_Kai_CHS_v0.01.zip \
+              Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt \
+              --target "$RELEASE_TARGET" \
+              --title "v0.01 — Pre-Game Translation Milestone" \
+              --notes-file release-notes/v0.01.md
           fi
 
-          gh release create v0.01 \
-            Kancolle_Kai_CHS_v0.01.zip \
-            Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt \
-            --target "$GITHUB_SHA" \
-            --title "v0.01 — Pre-Game Translation Milestone" \
-            --notes-file release-notes/v0.01.md
+          RELEASE_URL="$(gh release view v0.01 --json url --jq .url)"
+          echo "RELEASE_URL=$RELEASE_URL" >> "$GITHUB_ENV"
+          echo "Release URL: $RELEASE_URL"
+
+      - name: Record auditable release status
+        shell: python
+        env:
+          RELEASE_URL: ${{ env.RELEASE_URL }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          WORKFLOW_COMMIT: ${{ github.sha }}
+        run: |
+          import json
+          import os
+          from pathlib import Path
+
+          zip_sha = Path("release_zip_sha256.txt").read_text(encoding="ascii").strip()
+          status = {
+              "release": "v0.01",
+              "title": "v0.01 — Pre-Game Translation Milestone",
+              "status": "PUBLISHED",
+              "release_url": os.environ["RELEASE_URL"],
+              "release_zip": "Kancolle_Kai_CHS_v0.01.zip",
+              "release_zip_sha256": zip_sha,
+              "checksum_asset": "Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt",
+              "source_qc_commit": "a9a0ddf7bd0059751178dd062620d7209f4581e6",
+              "workflow_commit": os.environ["WORKFLOW_COMMIT"],
+              "github_actions_run_id": os.environ["RUN_ID"],
+              "github_actions_run_attempt": os.environ["RUN_ATTEMPT"],
+              "payload_count": 8,
+              "repository_qc": "PASS"
+          }
+          out = Path("release-status/v0.01.json")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(status, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+      - name: Commit release status receipt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add release-status/v0.01.json
+          git commit -m "Record published v0.01 release status"
+          git push
