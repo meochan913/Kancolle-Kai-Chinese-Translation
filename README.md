@@ -2,9 +2,24 @@
 
 《舰队Collection 改》（艦これ改 / KanColle Kai）PlayStation Vita 简体中文汉化工程。
 
-> 当前里程碑：**v0.01 — Pre-Game Translation Milestone**
+> 当前正式版本：**v0.01 — Pre-Game Translation Milestone**
 >
-> 截至 2026-08-23，正式进入游戏前的玩家可见内容已经完成汉化，并经过阶段性 PSV Vita 实机验证。
+> 截至 2026-08-23，正式进入游戏前的玩家可见内容已经完成汉化，并经过 PSV Vita 实机验证。
+
+## 下载
+
+**GitHub Release:**
+https://github.com/meochan913/Kancolle-Kai-Chinese-Translation/releases/tag/v0.01
+
+Release asset:
+
+`Kancolle_Kai_CHS_v0.01.zip`
+
+SHA-256:
+
+`2d7df4bcdfbe011e5b0f2ce0090226ab4db1fcfdb5375f1b5c80a8f173c34269`
+
+Release 页面同时提供 `Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt`。
 
 ## 当前进度
 
@@ -53,12 +68,13 @@ tools/                   patch 制作、应用与 hash 工具
 PROJECT_PATCH_LEDGER.json
                          项目级 single source of truth
 release-notes/           各版本 Release Notes
+release-status/          GitHub Release 可审计发布回执
 screenshots/             实机截图（后续导入）
 ```
 
 ## 安装
 
-v0.01 的 clean 1.02 → FINAL Vita-validated 单步 patch 已生成并通过独立 replay QC。当前工程包含 8 个 `.kckpatch` 差分文件及安装工具。
+v0.01 使用 **clean 1.02 → FINAL Vita-validated** 单步 patch。当前版本包含 8 个 `.kckpatch` 差分文件及 fail-closed 安装工具。
 
 详见 [`docs/INSTALL.md`](docs/INSTALL.md)；干净 1.02 输入哈希见 [`docs/SOURCE_BASELINE.md`](docs/SOURCE_BASELINE.md)。
 
@@ -66,11 +82,13 @@ v0.01 的 clean 1.02 → FINAL Vita-validated 单步 patch 已生成并通过独
 
 本项目采用 fail-closed QC：任一关键 gate 失败、关键输入缺失、或视觉目标未实际改善时，不允许标记为 PASS。
 
-详见 [`docs/QC_POLICY.md`](docs/QC_POLICY.md)。
+v0.01 的 8 个 patch 已从 clean 1.02 独立 replay，生成结果与 Vita 验证后的累计 `rePatch` 文件逐字节一致。仓库端 payload 也已完成独立完整性核验。
 
 ## 当前阶段
 
-当前已完成**从干净 1.02 直接到 v0.01 FINAL 的单步差分**。8 个 patch 均已独立 replay，生成结果与 Vita 验证后的累计 `rePatch` 文件逐字节一致。
+**v0.01 已正式发布。**
+
+下一阶段将进入正式母港后的游戏 UI 汉化，版本线进入 `v0.02` 开发阶段。
 
 ## Credits
 
