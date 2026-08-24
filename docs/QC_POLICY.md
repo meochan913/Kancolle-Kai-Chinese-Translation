@@ -87,14 +87,43 @@ Scope metrics such as `outside-mask changed = 0` are supporting evidence only. T
 
 Codec integrity does not equal visual correctness. Texture work must be decoded after the actual BC3/DXT5 write and inspected in game orientation. Non-target blocks should remain byte-identical whenever the patch design permits.
 
-For dense CJK text baked into BC3 textures, the rendering pipeline itself is a critical QC target. Avoid unnecessary low-resolution raster transforms before BC3. If the game applies non-uniform scaling, prefer high-resolution source-direct text generation or an equivalent single-resample method rather than `1× screen raster → inverse warp → BC3 → game rescale`.
+### Encoder-quality gate
+
+The BC3 encoder itself is part of the release surface and must be validated. Do not assume all DXT5 encoders are visually equivalent.
+
+For v0.02 M001 dense tutorial text, controlled testing proved Pillow DXT5 materially worse than ImageMagick DXT5 on the exact same raster. Pillow also introduced much larger generation loss when recompressing untouched original Japanese artwork. Therefore:
+
+- **Pillow DXT5 is prohibited for the v0.02 M001 full-screen tutorial pages**;
+- if an encoder is changed, the same uncompressed raster must be A/B roundtripped through both encoders and compared with objective metrics and pixel QC;
+- encoder selection must be based on the actual target texture/content, not convenience.
+
+Recommended evidence includes RGB MAE, Alpha MAE, PSNR, and 3× or greater nearest-neighbor visual comparisons.
+
+### Pre-BC3 color-complexity gate
+
+BC3 color encoding can represent only 4 RGB colors per 4×4 block. Dense antialiased CJK can easily exceed this capacity before compression.
+
+Before encoding dense baked text, inspect 4×4 blocks touched by text and measure/inspect color complexity. A pipeline that creates many unnecessary antialias/interpolation colors is a release risk even when the uncompressed PNG looks excellent.
+
+Avoid:
+
+- high-order supersampling/downsampling that creates large numbers of intermediate shades with no demonstrated post-BC3 benefit;
+- unnecessary inverse-affine raster transforms;
+- repeated lossy BC3 generations;
+- assuming a sharper pre-BC3 PNG will remain sharper after BC3.
+
+Prefer source-pixel-aware/hinted rasterization and the smallest number of necessary resampling steps, while preserving approved screen-space font height, baseline, line spacing, title hierarchy, and natural Chinese proportions.
+
+### Sharpness evidence gate
 
 When sharpness is a concern, required evidence should include:
 
-- BC3 roundtrip decode;
+- uncompressed source candidate;
+- actual BC3 roundtrip decode from the selected encoder;
 - simulated/measured game transform;
 - 3× or greater nearest-neighbor OLD/NEW pixel comparison;
-- inspection for 4×4 block color bleeding, mosaic artifacts, low-bitrate-like smearing, and softened CJK strokes.
+- inspection for 4×4 block color bleeding, mosaic artifacts, low-bitrate-like smearing, and softened CJK strokes;
+- encoder A/B comparison when the codec may be implicated.
 
 A texture that is structurally valid but visibly blocky or blurry is `FAIL`.
 
@@ -114,4 +143,6 @@ Example: in v0.02 M001 `TutorialGuide1`, the character `键` disappeared on hard
 
 The first `Strategy Tutorial` M001 candidate derived from v0.01 `resources.assets` (`f19fbcf5...fce8`) was rejected because source-to-game non-uniform stretch and original line-spacing/layout were not validated before packaging.
 
-REDO4 was later tested on hardware. Its transparency and overall layout were broadly acceptable, but the two full-screen Chinese tutorial pages showed severe blocky/mosaic blur. REDO4 is therefore also rejected as a cumulative development baseline. The next candidate must again start from v0.01 FINAL and use a sharper source-direct text-rendering pipeline.
+REDO4 was later tested on hardware. Its transparency and overall layout were broadly acceptable, but the two full-screen Chinese tutorial pages showed severe blocky/mosaic blur. REDO4 is therefore also rejected as a cumulative development baseline.
+
+Strict RCA later showed the main causes were not transparency or layout. The primary causes were poor Pillow DXT5 roundtrip quality and excessive pre-BC3 edge-color complexity from the rasterization pipeline; non-uniform game scaling was secondary. The next candidate must again start from v0.01 FINAL and use the corrected rasterization + encoder policy above.
