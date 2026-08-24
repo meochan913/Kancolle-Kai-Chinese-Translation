@@ -21,7 +21,7 @@ Before editing or approving the layout, the project must determine and record th
 - translation / crop offset;
 - orientation.
 
-If the game applies non-uniform scaling, the Chinese layout must be designed and QC'd in **game/screen space**, then mapped back to source texture space. Raw source-space appearance is not sufficient.
+If the game applies non-uniform scaling, the Chinese layout must be designed and QC'd in **game/screen space** and mapped back to source-space without unnecessary raster resampling. Raw source-space appearance is not sufficient.
 
 ## Mandatory overlay and typography gate
 
@@ -47,7 +47,7 @@ For translated text, the primary typography constraints are:
 - font height / visible glyph height consistent with the original design;
 - baseline or vertical center consistent with the original design;
 - line-center spacing / line spacing consistent with the original design;
-- correct alignment or anchor logic (for example, right-aligning a left-side label toward its arrow, or left-aligning a right-side label away from its arrow);
+- correct alignment or anchor logic;
 - remaining within the intended safe area without collisions or clipping.
 
 Horizontal width may differ naturally. It becomes a QC constraint only if the translated text collides with another element, clips, crosses an intended safe boundary, or violates a specific alignment rule.
@@ -87,12 +87,31 @@ Scope metrics such as `outside-mask changed = 0` are supporting evidence only. T
 
 Codec integrity does not equal visual correctness. Texture work must be decoded after the actual BC3/DXT5 write and inspected in game orientation. Non-target blocks should remain byte-identical whenever the patch design permits.
 
+For dense CJK text baked into BC3 textures, the rendering pipeline itself is a critical QC target. Avoid unnecessary low-resolution raster transforms before BC3. If the game applies non-uniform scaling, prefer high-resolution source-direct text generation or an equivalent single-resample method rather than `1× screen raster → inverse warp → BC3 → game rescale`.
+
+When sharpness is a concern, required evidence should include:
+
+- BC3 roundtrip decode;
+- simulated/measured game transform;
+- 3× or greater nearest-neighbor OLD/NEW pixel comparison;
+- inspection for 4×4 block color bleeding, mosaic artifacts, low-bitrate-like smearing, and softened CJK strokes.
+
+A texture that is structurally valid but visibly blocky or blurry is `FAIL`.
+
+## Dynamic-font / glyph gate
+
+For runtime UILabel or other dynamic-font text, a serialized string containing the intended character is **not sufficient evidence** that the glyph will render.
+
+If a character has previously disappeared, rendered blank, or been substituted on Vita, that character becomes an explicit hardware glyph gate. The exact character must be visibly present in a hardware screenshot before the component can be marked `VITA PASS`.
+
+Example: in v0.02 M001 `TutorialGuide1`, the character `键` disappeared on hardware in a previous candidate. Future candidates containing `键` must visibly render the glyph; otherwise the build is `FAIL` even when the serialized text itself is correct.
+
 ## Hardware gate
 
 `VITA PASS` may only be assigned after the exact candidate binary is tested successfully on PSV Vita.
 
-## v0.02 M001 rejection note
+## v0.02 M001 rejection notes
 
-The first `Strategy Tutorial` M001 candidate derived from v0.01 `resources.assets` (`f19fbcf5...fce8`) is **REJECTED** for the two full-screen tutorial pages because source-to-game non-uniform stretch and original line-spacing/layout were not validated before packaging.
+The first `Strategy Tutorial` M001 candidate derived from v0.01 `resources.assets` (`f19fbcf5...fce8`) was rejected because source-to-game non-uniform stretch and original line-spacing/layout were not validated before packaging.
 
-The right-bottom `TutorialGuide1` UILabel translation is not rejected by this finding and remains pending hardware inspection; the two full-screen pages must be rebuilt from the accepted `info2` V12 clean plate with strict game-space geometry/overlay QC before a replacement Vita candidate is produced.
+REDO4 was later tested on hardware. Its transparency and overall layout were broadly acceptable, but the two full-screen Chinese tutorial pages showed severe blocky/mosaic blur. REDO4 is therefore also rejected as a cumulative development baseline. The next candidate must again start from v0.01 FINAL and use a sharper source-direct text-rendering pipeline.
