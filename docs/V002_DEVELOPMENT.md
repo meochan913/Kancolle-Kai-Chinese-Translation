@@ -89,25 +89,83 @@ Because REDO4 failed hardware visual quality, the next M001 candidate must again
 
 Do not patch on top of REDO4.
 
-### Sharpness root cause and replacement rendering pipeline
+### Corrected strict RCA — full-screen tutorial mosaic blur
 
-The REDO4 text pipeline rasterized Chinese at approximately Vita screen resolution, inverse-affine warped that 1× raster back into the 1024×512 source texture, encoded it to BC3/DXT5, and then let the game rescale it again. Dense Chinese strokes therefore suffered:
+The earlier explanation that the extra inverse-affine transform was the main cause was incomplete. Controlled A/B testing on 2026-08-24 identifies two primary causes and two secondary contributors.
 
-- an avoidable inverse-warp interpolation pass;
-- BC3 4×4 color quantization on already-soft antialiased edges;
-- a second non-uniform game rescale.
+#### PRIMARY #1 — Pillow DXT5 encoder quality
 
-The replacement offline candidate uses a **source-direct high-resolution typography pipeline**:
+Using the **exact same REDO4 uncompressed raster** in the body-text region:
 
-1. render typography at 8× in final Vita geometry;
-2. map each text item directly from that high-resolution artwork into its final source-space patch in one resampling step;
-3. never create a 1× 960×544 text raster and inverse-warp the whole page;
-4. optionally quantize edge coverage to a small number of BC3-friendly levels so blocks contain fewer blended colors;
-5. BC3 roundtrip;
-6. measured source→Vita transform simulation;
-7. 3× nearest-neighbor OLD/NEW pixel QC before packaging.
+- Pillow DXT5: RGB MAE `14.46`, Alpha MAE `3.54`, PSNR `22.04 dB`
+- ImageMagick DXT5: RGB MAE `11.45`, Alpha MAE `0.75`, PSNR `24.78 dB`
 
-The source-direct + BC3-friendly-edge result is currently **OFFLINE VISUAL CANDIDATE / Vita pending**, not PASS.
+This is an encoder-only comparison; layout and source pixels are identical.
+
+A stronger control test used the untouched original Japanese `info1_set` decoded texture and compressed it one extra generation without editing any pixels:
+
+- Pillow DXT5: RGBA MAE `2.16`, Alpha MAE `3.20`, PSNR `31.41 dB`
+- ImageMagick DXT5: RGBA MAE `0.47`, Alpha MAE `0.42`, PSNR `48.41 dB`
+
+Therefore Pillow's DXT5 encoder is formally rejected for these dense text textures. It adds materially more generation loss even to the original Japanese artwork.
+
+#### PRIMARY #2 — too many antialias/interpolation colors per BC3 block
+
+REDO4's supersampled/resampled text produces a very high number of intermediate RGB edge colors before compression.
+
+For 4×4 blocks touched by body text:
+
+- REDO4 supersampled raster: median `13` distinct RGB colors/block; P90 `16`
+- Native 1× hinted test raster: median `7`; P90 `12`
+
+BC3's color payload is BC1-like and can represent only **4 RGB colors per 4×4 block**. The REDO4 raster therefore forces aggressive color collapse of white fill, gray outline, cyan emphasis, blue background, and multiple antialias shades. This is the direct mechanism behind the visible low-bitrate/mosaic appearance.
+
+With native-pixel/hinted text plus ImageMagick DXT5, the same test body region improves further to:
+
+- RGB MAE `8.06`
+- Alpha MAE `0.44`
+- PSNR `26.63 dB`
+
+This proves that reducing pre-BC3 edge-color complexity matters independently from changing the encoder.
+
+#### CONTRIBUTOR — dense/fine CJK geometry
+
+Supporting measurement from the source-space body mask:
+
+- original Japanese mean effective mask thickness: approximately `3.53 px`, P90 `7.00 px`
+- REDO4 Chinese: approximately `3.01 px`, P90 `5.79 px`
+
+Chinese strings also contain more dense high-frequency stroke transitions. That makes block quantization more visible. This does **not** justify changing font height or compressing text width; any weight/hinting adjustment must preserve the already approved game-space typography geometry.
+
+#### SECONDARY — game non-uniform scaling
+
+The measured `X≈0.93745 / Y≈1.12702` game transform magnifies codec damage that already exists after BC3 decode. It is not the primary source of the mosaic artifact.
+
+#### Ruled out as root causes
+
+- Clean-plate transparency: hardware transparency is visually correct.
+- Overall 1024×512 texture resolution: the original Japanese text is sharp at the same texture resolution.
+- Vita screenshot/capture quality: original Japanese text in the same hardware capture remains substantially cleaner.
+- Layout/line spacing: REDO3 geometry was user-approved before the sharpness failure was isolated.
+
+### Mandatory replacement rendering/encoding pipeline
+
+The previous `high-resolution source-direct + Pillow DXT5` concept is superseded. High-resolution supersampling alone does not solve this issue and can increase intermediate edge colors.
+
+For the next candidate:
+
+1. start from the accepted V12 clean plate and **v0.01 FINAL** Mother;
+2. retain the approved REDO3 font heights, baselines, line spacing, anchors, title hierarchy, and natural Chinese width;
+3. rasterize dense baked CJK text with source-pixel-aware/hinted geometry that minimizes unnecessary intermediate edge colors;
+4. avoid whole-page or 1× screen inverse-affine rasterization;
+5. avoid gratuitous high-order supersampling/downsampling if it increases per-block color complexity;
+6. use a higher-quality BC3 encoder; **Pillow DXT5 is prohibited for this component**;
+7. after encoding, decode the actual BC3 payload and inspect at normal game orientation;
+8. run measured Vita-transform simulation;
+9. produce 3× or greater nearest-neighbor comparison against the previous hardware failure and original Japanese reference;
+10. only then package a Vita candidate.
+
+Current corrected status: **RCA COMPLETE / replacement raster+encoder candidate not yet hardware validated**.
 
 ### Current next-candidate text decisions
 
