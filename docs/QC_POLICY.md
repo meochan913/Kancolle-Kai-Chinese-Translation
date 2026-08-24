@@ -30,15 +30,31 @@ For source-based UI/text replacements, final visual QC must include, as applicab
 - original game-space reference;
 - Chinese simulated or decoded game-space result;
 - strict overlay (normally 50% original + 50% candidate and/or edge overlay);
-- text block bounding boxes;
-- horizontal/vertical anchors;
-- baseline comparison;
+- vertical text extent / font-height comparison;
+- horizontal/vertical anchors where they are semantically meaningful;
+- baseline or vertical-center comparison;
 - line-spacing comparison;
-- font-height comparison;
 - stretch/aspect comparison;
 - target-region absolute diff.
 
-Line breaks, baseline positions, line spacing, and text block proportions must be deliberately matched to the original design. A layout must not be accepted merely because the Chinese text fits inside the texture.
+### Translation-width rule
+
+**Translated line width is not an overlay target by itself.** Japanese and Chinese strings naturally have different lengths. The Chinese layout must keep normal glyph proportions and must not be horizontally squeezed or expanded merely to reproduce the original Japanese line width.
+
+For translated text, the primary typography constraints are:
+
+- natural glyph aspect ratio in final game/screen space;
+- font height / visible glyph height consistent with the original design;
+- baseline or vertical center consistent with the original design;
+- line-center spacing / line spacing consistent with the original design;
+- correct alignment or anchor logic (for example, right-aligning a left-side label toward its arrow, or left-aligning a right-side label away from its arrow);
+- remaining within the intended safe area without collisions or clipping.
+
+Horizontal width may differ naturally. It becomes a QC constraint only if the translated text collides with another element, clips, crosses an intended safe boundary, or violates a specific alignment rule.
+
+When a title contains multiple typographic levels, each level must be measured separately. For example, the Strategy Tutorial title uses a larger `戦略画面` main title and a smaller `解説` subtitle; the Chinese `战略界面` and `说明` must preserve that hierarchy rather than being rendered at one common size.
+
+Line breaks, baseline positions, line spacing, vertical size, and text hierarchy must be deliberately matched to the original design. A layout must not be accepted merely because the Chinese text fits inside the texture.
 
 If these measurements/evidence are missing, the visual build is `INCOMPLETE` and must not be packaged as a Vita candidate.
 
