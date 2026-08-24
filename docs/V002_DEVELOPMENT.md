@@ -10,8 +10,6 @@ Reason: the Chinese layout was designed in raw 1024×512 texture space without f
 
 Do not reuse the rejected full-screen tutorial raster/layout as a baseline.
 
-The right-bottom `TutorialGuide1` UILabel translation is **not rejected by this finding** and remains pending hardware inspection.
-
 ### Accepted clean plate
 
 The project uses a single clean plate based on `info2_set`:
@@ -39,11 +37,9 @@ Operational interpretation:
 - Y offset/crop: approximately `-12.53 px`
 - non-uniform stretch is real and must be included in layout QC
 
-### Mandatory redo rule
+### Mandatory layout rule
 
-The Chinese tutorial typography is designed in Vita screen-space and then inverse-mapped back into the 1024×512 source texture.
-
-**Japanese line width is not a matching target.** Chinese text must retain natural proportions. Required vertical/design targets are:
+**Japanese line width is not a matching target.** Chinese text must retain natural proportions. Required typography targets are:
 
 - visible font/glyph height;
 - baseline or vertical center;
@@ -52,7 +48,7 @@ The Chinese tutorial typography is designed in Vita screen-space and then invers
 - safe-area fit and collision avoidance;
 - independent main-title/subtitle sizing when the original uses multiple typographic levels.
 
-Required QC before packaging a replacement Vita candidate:
+Required visual QC before packaging a Vita candidate:
 
 1. Original Vita screenshot.
 2. Chinese candidate simulated/decoded in Vita geometry.
@@ -62,18 +58,67 @@ Required QC before packaging a replacement Vita candidate:
 6. Separate title hierarchy comparison (`戦略画面` vs `解説`; `战略界面` vs `说明`).
 7. BC3 roundtrip decode in game orientation.
 
-### REDO3 approval and REDO4 surgical fixes
+### REDO3 layout approval
 
-The user approved the REDO3 screen-space typography/layout, with two requested corrections only:
+The user approved the REDO3 screen-space layout after the width-matching constraint was removed. Persistent accepted layout rules include:
 
-1. Page 1 second line: `出击` must use the original cyan/blue emphasis. Other Page 1 geometry is frozen.
-2. Page 2 second line uses `按【 R 】键即可移动。`
-   - no literal space before `【`;
-   - no literal space after `】`;
-   - spacing is inside the brackets only: `【 R 】`.
+- Chinese width is natural and unconstrained except for safe-area/collision limits.
+- `战略界面` and `说明` use separate title sizes matching the original hierarchy.
+- Page 1 `出击` uses cyan emphasis.
+- Page 2 control notation uses `按【 R 】键即可移动。`; there are no spaces outside the full-width brackets and spaces are inside only.
 
-This special-symbol spacing convention is a persistent project typography rule and must be called out explicitly whenever similar controller/button notation appears in future translation work.
+### REDO4 hardware result — REJECTED as a cumulative development baseline
 
-The right-bottom `TutorialGuide1` UILabel candidate remains unchanged and pending Vita inspection.
+REDO4 was tested on PSV Vita on 2026-08-24.
 
-No REDO4 component may be marked `VITA PASS` until the exact REDO4 binary is tested on hardware.
+Hardware findings:
+
+1. The two full-screen tutorial pages had correct transparency and broadly correct geometry, but all newly rendered Chinese text showed severe blocky/mosaic blur resembling low-bitrate video. The full-screen REDO4 raster is therefore **FAIL / REJECTED** and must not become the next cumulative Mother.
+2. Right-side fleet annotation was too close to the safe boundary. Replacement wording is locked for the next candidate:
+   - line 1: `当前舰队旗舰`
+   - line 2: `（秘书舰）`
+3. `TutorialGuide1` displayed the previous body string with the `键` glyph missing on hardware. The desired replacement body is:
+   - line 1: `按下` + native R-button sprite + `键`
+   - line 2: `即可前往旗舰提督室！`
+   The R sprite should be positioned as a real UI element rather than approximated with spaces if needed.
+4. `TutorialGuide1` title may remain `前往旗舰提督室界面` with `旗舰提督室` highlighted green unless later reopened.
+
+Because REDO4 failed hardware visual quality, the next M001 candidate must again start from **v0.01 FINAL** `resources.assets` SHA-256:
+
+`f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8`
+
+Do not patch on top of REDO4.
+
+### Sharpness root cause and replacement rendering pipeline
+
+The REDO4 text pipeline rasterized Chinese at approximately Vita screen resolution, inverse-affine warped that 1× raster back into the 1024×512 source texture, encoded it to BC3/DXT5, and then let the game rescale it again. Dense Chinese strokes therefore suffered:
+
+- an avoidable inverse-warp interpolation pass;
+- BC3 4×4 color quantization on already-soft antialiased edges;
+- a second non-uniform game rescale.
+
+The replacement offline candidate uses a **source-direct high-resolution typography pipeline**:
+
+1. render typography at 8× in final Vita geometry;
+2. map each text item directly from that high-resolution artwork into its final source-space patch in one resampling step;
+3. never create a 1× 960×544 text raster and inverse-warp the whole page;
+4. optionally quantize edge coverage to a small number of BC3-friendly levels so blocks contain fewer blended colors;
+5. BC3 roundtrip;
+6. measured source→Vita transform simulation;
+7. 3× nearest-neighbor OLD/NEW pixel QC before packaging.
+
+The source-direct + BC3-friendly-edge result is currently **OFFLINE VISUAL CANDIDATE / Vita pending**, not PASS.
+
+### Current next-candidate text decisions
+
+Full-screen pages:
+
+- right-side annotation: `当前舰队旗舰` / `（秘书舰）`;
+- all other REDO3-approved wording, color emphasis, font heights, baselines, line spacing, and title hierarchy remain frozen unless explicitly reopened.
+
+TutorialGuide1 body:
+
+- line 1: `按下` + native R-button sprite + `键`
+- line 2: `即可前往旗舰提督室！`
+
+The previous missing `键` is now a dedicated hardware glyph gate: a future Vita candidate cannot PASS merely because the serialized string contains `键`; the glyph itself must visibly render on hardware.
