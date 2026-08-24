@@ -1,0 +1,34 @@
+{
+  "Assembly-CSharp.dll.kckpatch": {
+    "size": 1253,
+    "sha256": "9cae0b6305f91ddffdda22cb6aeb99aaf2bfe00c00565cd3dd4651ed0c6e8336"
+  },
+  "level2.kckpatch": {
+    "size": 643,
+    "sha256": "23c41e72d69b4300c29d51c49a8ab32ba78aef0944e720add3c08e28aab6b98b"
+  },
+  "level5.kckpatch": {
+    "size": 6442,
+    "sha256": "101e77bde3d14853f9c4ee98912b14f14116418866d15ca27df7c500e524dda4"
+  },
+  "resources.assets.kckpatch": {
+    "size": 709644,
+    "sha256": "f225d04c44e5019386d73396fb8f8f751f05625faf4d769e7e1f42e30b363b25"
+  },
+  "sharedassets2.assets.kckpatch": {
+    "size": 440601,
+    "sha256": "b0416006f2b500a21c08c4fc63bdb356783b5dd491cd593488c4e50c5d53f792"
+  },
+  "sharedassets3.assets.kckpatch": {
+    "size": 2488023,
+    "sha256": "d44d4f0328a4eec7bfe597044b4de3578b856e5dcc170f20e1084aaee7d589ab"
+  },
+  "sharedassets5.assets.kckpatch": {
+    "size": 653441,
+    "sha256": "0d6f5de66457125382aa88493fb79642493131f1e6464b48d0b269dc8c28ff30"
+  },
+  "sharedassets6.assets.kckpatch": {
+    "size": 214065,
+    "sha256": "a1779808fbbc39fd2362c6f810abd7455dceb3180b6d1f23bd02c853191314b5"
+  }
+}
