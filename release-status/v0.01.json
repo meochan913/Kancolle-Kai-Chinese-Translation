@@ -1,0 +1,15 @@
+{
+  "release": "v0.01",
+  "title": "v0.01 — Pre-Game Translation Milestone",
+  "status": "PUBLISHED",
+  "release_url": "https://github.com/meochan913/Kancolle-Kai-Chinese-Translation/releases/tag/v0.01",
+  "release_zip": "Kancolle_Kai_CHS_v0.01.zip",
+  "release_zip_sha256": "2d7df4bcdfbe011e5b0f2ce0090226ab4db1fcfdb5375f1b5c80a8f173c34269",
+  "checksum_asset": "Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt",
+  "source_qc_commit": "a9a0ddf7bd0059751178dd062620d7209f4581e6",
+  "workflow_commit": "7091801a99d358e7cb98989a8fe7f114b1dcbc85",
+  "github_actions_run_id": "32681364998",
+  "github_actions_run_attempt": "1",
+  "payload_count": 8,
+  "repository_qc": "PASS"
+}
