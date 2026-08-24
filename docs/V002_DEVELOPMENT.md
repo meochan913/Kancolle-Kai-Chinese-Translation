@@ -41,16 +41,39 @@ Operational interpretation:
 
 ### Mandatory redo rule
 
-All translated text for these pages must be laid out with the original source-space text boxes and line spacing as targets, then validated after applying the measured source→Vita transform.
+The Chinese tutorial typography is designed in Vita screen-space and then inverse-mapped back into the 1024×512 source texture.
+
+**Japanese line width is not a matching target.** Chinese text must retain natural proportions. Required vertical/design targets are:
+
+- visible font/glyph height;
+- baseline or vertical center;
+- line-center spacing / line spacing;
+- anchor/alignment logic;
+- safe-area fit and collision avoidance;
+- independent main-title/subtitle sizing when the original uses multiple typographic levels.
 
 Required QC before packaging a replacement Vita candidate:
 
 1. Original Vita screenshot.
 2. Chinese candidate simulated/decoded in Vita geometry.
-3. 50% original/candidate overlay.
-4. Original vs Chinese text bbox overlay.
-5. Baseline and line-spacing comparison.
-6. Font-height comparison.
+3. 50% original/candidate overlay where meaningful.
+4. Font-height and vertical-center/baseline guides.
+5. Line-spacing comparison.
+6. Separate title hierarchy comparison (`戦略画面` vs `解説`; `战略界面` vs `说明`).
 7. BC3 roundtrip decode in game orientation.
 
-No replacement M001 Vita candidate may be packaged until these visual gates pass.
+### REDO3 approval and REDO4 surgical fixes
+
+The user approved the REDO3 screen-space typography/layout, with two requested corrections only:
+
+1. Page 1 second line: `出击` must use the original cyan/blue emphasis. Other Page 1 geometry is frozen.
+2. Page 2 second line uses `按【 R 】键即可移动。`
+   - no literal space before `【`;
+   - no literal space after `】`;
+   - spacing is inside the brackets only: `【 R 】`.
+
+This special-symbol spacing convention is a persistent project typography rule and must be called out explicitly whenever similar controller/button notation appears in future translation work.
+
+The right-bottom `TutorialGuide1` UILabel candidate remains unchanged and pending Vita inspection.
+
+No REDO4 component may be marked `VITA PASS` until the exact REDO4 binary is tested on hardware.
