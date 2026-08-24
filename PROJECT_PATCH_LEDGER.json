@@ -1,11 +1,22 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "project": "Kancolle-Kai-Chinese-Translation",
   "title_id": "PCSG00684",
   "target_game_version": "1.02",
   "current_release": "v0.01",
   "current_milestone": "Pre-Game Translation Milestone",
-  "release_status": "FINAL_VITA_VALIDATED",
+  "release_status": "PUBLISHED_VITA_VALIDATED",
+  "release_publication": {
+    "tag": "v0.01",
+    "title": "v0.01 — Pre-Game Translation Milestone",
+    "url": "https://github.com/meochan913/Kancolle-Kai-Chinese-Translation/releases/tag/v0.01",
+    "asset": "Kancolle_Kai_CHS_v0.01.zip",
+    "asset_sha256": "2d7df4bcdfbe011e5b0f2ce0090226ab4db1fcfdb5375f1b5c80a8f173c34269",
+    "checksum_asset": "Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt",
+    "source_qc_commit": "a9a0ddf7bd0059751178dd062620d7209f4581e6",
+    "github_actions_run_id": "32681364998",
+    "publication_status": "PASS"
+  },
   "policy": {
     "single_source_of_truth": true,
     "fail_closed_qc": true,
