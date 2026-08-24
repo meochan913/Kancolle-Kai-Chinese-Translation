@@ -58,6 +58,25 @@ Line breaks, baseline positions, line spacing, vertical size, and text hierarchy
 
 If these measurements/evidence are missing, the visual build is `INCOMPLETE` and must not be packaged as a Vita candidate.
 
+### Special-symbol spacing rule
+
+For control labels, button legends, bracketed keys, controller symbols, and similar special UI notation, **do not add literal spaces immediately outside the symbol/brackets** unless the original design specifically requires them.
+
+Preferred pattern when extra visual breathing room is needed around a single key label:
+
+- correct: `按【 R 】键`
+- avoid: `按 【R】 键`
+- avoid: `按 【 R 】 键`
+
+Operational rule:
+
+- keep surrounding Chinese text directly adjacent to the outer brackets/symbol;
+- when the full-width brackets themselves look visually cramped, add spacing **inside** the brackets, e.g. `【 R 】`;
+- do not silently normalize these spaces during later edits;
+- every time a translated UI string contains this kind of special symbol, the assistant must explicitly tell the user which spacing form is being used so it can be visually confirmed.
+
+This is a persistent project typography rule.
+
 ## Clean-plate gate
 
 A clean plate must remove the original glyphs, outlines, shadows, and alpha contamination without introducing visible smears, dark blobs, seams, or flattened background texture.
