@@ -1,0 +1,120 @@
+name: Publish v0.01 Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/publish-v001.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify v0.01 patch payloads
+        shell: python
+        run: |
+          import hashlib
+          import json
+          from pathlib import Path
+
+          manifest_path = Path("manifests/v0.01-patch-payloads.sha256.json")
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+          for name, expected in manifest.items():
+              path = Path("patches/v0.01") / name
+              if not path.is_file():
+                  raise SystemExit(f"Missing patch payload: {path}")
+              data = path.read_bytes()
+              size = len(data)
+              sha = hashlib.sha256(data).hexdigest()
+              if size != expected["size"]:
+                  raise SystemExit(f"Size mismatch for {name}: expected {expected['size']}, got {size}")
+              if sha != expected["sha256"]:
+                  raise SystemExit(f"SHA-256 mismatch for {name}: expected {expected['sha256']}, got {sha}")
+              print(f"PASS {name} {size} {sha}")
+
+      - name: Build deterministic v0.01 release package
+        shell: python
+        run: |
+          import hashlib
+          import json
+          import shutil
+          import zipfile
+          from pathlib import Path
+
+          package_name = "Kancolle_Kai_CHS_v0.01"
+          stage = Path("release_build") / package_name
+          stage.mkdir(parents=True, exist_ok=True)
+
+          files = [
+              "README.md",
+              "APPLY_V001.cmd",
+              "PROJECT_PATCH_LEDGER.json",
+              "docs/INSTALL.md",
+              "docs/SOURCE_BASELINE.md",
+              "docs/V001_FINAL_HASHES.md",
+              "manifests/v0.01.json",
+              "manifests/v0.01-patch-payloads.sha256.json",
+              "tools/apply_v001.py",
+              "patches/v0.01/README.md",
+              "release-notes/v0.01.md",
+          ]
+          files += [str(p) for p in sorted(Path("patches/v0.01").glob("*.kckpatch"))]
+
+          for rel in files:
+              src = Path(rel)
+              if not src.is_file():
+                  raise SystemExit(f"Required release file missing: {src}")
+              dst = stage / src
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(src, dst)
+
+          zip_path = Path(f"{package_name}.zip")
+          fixed_time = (2026, 8, 23, 0, 0, 0)
+          with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+              for path in sorted(stage.rglob("*")):
+                  if not path.is_file():
+                      continue
+                  arcname = path.relative_to(stage.parent).as_posix()
+                  info = zipfile.ZipInfo(arcname, fixed_time)
+                  info.compress_type = zipfile.ZIP_DEFLATED
+                  info.external_attr = 0o644 << 16
+                  z.writestr(info, path.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+
+          zip_sha = hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          payload_manifest = json.loads(Path("manifests/v0.01-patch-payloads.sha256.json").read_text(encoding="utf-8"))
+          checksum_path = Path("Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt")
+          lines = [
+              f"{zip_sha}  {zip_path.name}",
+              "",
+              "Patch payload SHA-256:",
+          ]
+          for name in sorted(payload_manifest):
+              lines.append(f"{payload_manifest[name]['sha256']}  patches/v0.01/{name}")
+          checksum_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+          print(f"Release ZIP: {zip_path}")
+          print(f"Release ZIP SHA-256: {zip_sha}")
+
+      - name: Create GitHub Release v0.01
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v0.01 >/dev/null 2>&1; then
+            echo "Release v0.01 already exists; refusing to overwrite it."
+            exit 1
+          fi
+
+          gh release create v0.01 \
+            Kancolle_Kai_CHS_v0.01.zip \
+            Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt \
+            --target "$GITHUB_SHA" \
+            --title "v0.01 — Pre-Game Translation Milestone" \
+            --notes-file release-notes/v0.01.md
