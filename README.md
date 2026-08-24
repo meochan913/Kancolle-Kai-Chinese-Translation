@@ -53,12 +53,12 @@ tools/                   patch 制作、应用与 hash 工具
 PROJECT_PATCH_LEDGER.json
                          项目级 single source of truth
 release-notes/           各版本 Release Notes
-screenshots/              实机截图（后续导入）
+screenshots/             实机截图（后续导入）
 ```
 
 ## 安装
 
-v0.01 的公开一键 patch 包将在所有 FINAL 文件与原始 1.02 Mother 文件重新导入并生成 clean-base → v0.01 差分后发布。
+v0.01 的 clean 1.02 → FINAL Vita-validated 单步 patch 已生成并通过独立 replay QC。当前工程包含 8 个 `.kckpatch` 差分文件及安装工具。
 
 详见 [`docs/INSTALL.md`](docs/INSTALL.md)；干净 1.02 输入哈希见 [`docs/SOURCE_BASELINE.md`](docs/SOURCE_BASELINE.md)。
 
@@ -70,7 +70,7 @@ v0.01 的公开一键 patch 包将在所有 FINAL 文件与原始 1.02 Mother �
 
 ## 当前阶段
 
-目前仓库骨架与工程 ledger 已建立。下一步是把项目当前 FINAL 文件和 pristine 1.02 Mother 文件配对，生成**从干净 1.02 直接到 v0.01 的单步差分**。
+当前已完成**从干净 1.02 直接到 v0.01 FINAL 的单步差分**。8 个 patch 均已独立 replay，生成结果与 Vita 验证后的累计 `rePatch` 文件逐字节一致。
 
 ## Credits
 
