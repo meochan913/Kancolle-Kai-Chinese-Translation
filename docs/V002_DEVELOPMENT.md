@@ -1,182 +1,332 @@
 # v0.02 Development State
 
-## M001 — Strategy Tutorial
+## Current status
 
-### Rejected candidate
+- Formal public release remains **v0.01 — Pre-Game Translation Milestone**.
+- v0.02 is a development line and is **not** a formal GitHub Release yet.
+- **M001 — Strategy Tutorial RGBA32 is PSV Vita HARDWARE PASS / ACCEPTED / LOCKED** as of 2026-08-24.
+- The exact Vita-tested package was `Kancolle_Kai_v0.02_M001_RGBA32_VITA_CANDIDATE.zip`.
+- ZIP SHA-256: `2e0f1a312dbf4f0618ac2860aa4ee72943045c79253ae69912e0bd8cdcf22eb8`.
 
-The first v0.02 M001 Vita candidate is **REJECTED** for the two full-screen strategy tutorial pages.
+M001 is frozen by default. Do not reopen or rebuild it unless explicitly requested.
 
-Reason: the Chinese layout was designed in raw 1024×512 texture space without first validating the actual Vita display transform, line spacing, baseline alignment, and strict overlay against original hardware screenshots.
+## M001 development Mother
 
-Do not reuse the rejected full-screen tutorial raster/layout as a baseline.
+M001 was developed cumulatively from the v0.01 FINAL Vita-validated state, not directly from clean 1.02.
+
+Development Mothers used for M001:
+
+- `resources.assets`: `f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8`
+- `sharedassets2.assets`: `7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61`
+
+For future formal v0.02 publication, development history must be normalized again to deterministic single-step patches from the clean 1.02 public Mother.
+
+## M001 FINAL Vita-PASS outputs
+
+### resources.assets
+
+- SHA-256: `fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e`
+- Size: `1,281,469,816` bytes
+- Status: `VITA_PASS_FINAL_LOCKED`
+
+### sharedassets2.assets
+
+- SHA-256: `80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d`
+- Size: `3,382,312` bytes
+- Status: `VITA_PASS_FINAL_LOCKED`
+
+## Current cumulative v0.02 development Mother after M001
+
+M002 and later v0.02 development work must start from this cumulative Vita-PASS state unless M001 itself is intentionally rebuilt and revalidated:
+
+| File | SHA-256 |
+| --- | --- |
+| `level2` | `e4620fba82e4b50124c412d5a885ca9255be9e8590b3db0ec080122762bb2e73` |
+| `level5` | `9d83c6183e0cb4d064d2bc69199059396c0f5d06e970c335777a37749ee9fff5` |
+| `Managed/Assembly-CSharp.dll` | `ae2b1f2a6c008f05f19ad10dd4a7c963ef8b5294d2e8d3b538b387370149d90e` |
+| `resources.assets` | `fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e` |
+| `sharedassets2.assets` | `80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d` |
+| `sharedassets3.assets` | `05474b778394a89e3f11f3081418a6256fda1a7a16ff23d702279713fa83638b` |
+| `sharedassets5.assets` | `c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23` |
+| `sharedassets6.assets` | `f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487` |
+
+Do **not** start M002 from the older v0.01 `resources.assets=f19f...` or `sharedassets2=7cde...` cumulative files.
+
+## Full-screen Strategy Tutorial textures
+
+Both targets are in `resources.assets`.
+
+### Page 1
+
+- Name: `info1_set`
+- PathID: `4363`
+
+### Page 2
+
+- Name: `info2_set`
+- PathID: `2180`
+
+Original assets:
+
+- dimensions: `1024×512`
+- TextureFormat: `12 = DXT5/BC3`
+- payload: `524,288` bytes
+- serialized object size: `524,364` bytes
+
+M001 FINAL:
+
+- dimensions: `1024×512`
+- TextureFormat: `4 = RGBA32`
+- payload: `2,097,152` bytes
+- serialized object size: `2,097,228` bytes
 
 ### Accepted clean plate
 
-The project uses a single clean plate based on `info2_set`:
+The single maintained clean plate is `info2 V12`.
 
-- `info2` V12 clean plate: user visually approved / FINAL clean-plate baseline.
-- `info1` must reuse the exact same clean plate; only the translated body copy differs between page 1 and page 2.
+- V12: user approved / FINAL
+- `info1` reuses the exact same clean base and differs only in translated body content.
+- Older V3/V4/V5/V7/V8 clean-plate experiments are superseded.
+- Known failures: V4 original-glyph residue; V8 black-spot contamination.
 
-### Source-to-Vita transform — measured from original hardware screenshots
+## Source-to-Vita transform
 
-Original texture size: `1024×512`
+Source texture: `1024×512`
 
-Original Vita screenshots: `960×544`
+Vita screenshot: `960×544`
 
-Independent SIFT/RANSAC affine registration of original `info1_set` and `info2_set` against the supplied Vita screenshots produced nearly identical transforms. Average transform:
+Measured average SIFT/RANSAC affine transform:
 
 ```text
-x_screen ≈ 0.937448988 * x_source - 0.000068203 * y_source + 0.045778
-y_screen ≈ 0.000064234 * x_source + 1.127019970 * y_source - 12.528998
+x_screen ≈ 0.937448988 * x_source
+           - 0.000068203 * y_source
+           + 0.045778
+
+y_screen ≈ 0.000064234 * x_source
+           + 1.127019970 * y_source
+           - 12.528998
 ```
 
-Operational interpretation:
+Operational approximation:
 
-- X scale: approximately `0.93745×`
-- Y scale: approximately `1.12702×`
-- Y offset/crop: approximately `-12.53 px`
-- non-uniform stretch is real and must be included in layout QC
+- X scale: `0.93745×`
+- Y scale: `1.12702×`
+- Y offset: `-12.53 px`
+- non-uniform stretch is real
 
-### Mandatory layout rule
+All source-texture UI work must be evaluated in game/screen space before acceptance.
 
-**Japanese line width is not a matching target.** Chinese text must retain natural proportions. Required typography targets are:
+## Permanent typography rules confirmed by M001
 
-- visible font/glyph height;
-- baseline or vertical center;
-- line-center spacing / line spacing;
+### Translation width
+
+Japanese line width is **not** an overlay target. Do not horizontally squeeze or expand Chinese text merely to match Japanese line length.
+
+Match instead:
+
+- visible glyph/font height;
+- baseline / vertical center;
+- line spacing;
+- hierarchy;
 - anchor/alignment logic;
-- safe-area fit and collision avoidance;
-- independent main-title/subtitle sizing when the original uses multiple typographic levels.
+- safe area;
+- final game-space glyph aspect.
 
-Required visual QC before packaging a Vita candidate:
+### Title hierarchy
 
-1. Original Vita screenshot.
-2. Chinese candidate simulated/decoded in Vita geometry.
-3. 50% original/candidate overlay where meaningful.
-4. Font-height and vertical-center/baseline guides.
-5. Line-spacing comparison.
-6. Separate title hierarchy comparison (`戦略画面` vs `解説`; `战略界面` vs `说明`).
-7. BC3 roundtrip decode in game orientation.
+Original:
 
-### REDO3 layout approval
+- `戦略画面` = large
+- `解説` = smaller
 
-The user approved the REDO3 screen-space layout after the width-matching constraint was removed. Persistent accepted layout rules include:
+Chinese:
 
-- Chinese width is natural and unconstrained except for safe-area/collision limits.
-- `战略界面` and `说明` use separate title sizes matching the original hierarchy.
-- Page 1 `出击` uses cyan emphasis.
-- Page 2 control notation uses `按【 R 】键即可移动。`; there are no spaces outside the full-width brackets and spaces are inside only.
+- `战略界面` = large
+- `说明` = smaller
 
-### REDO4 hardware result — REJECTED as a cumulative development baseline
+These levels must be measured independently.
 
-REDO4 was tested on PSV Vita on 2026-08-24.
+### Special-symbol spacing
 
-Hardware findings:
+Locked form:
 
-1. The two full-screen tutorial pages had correct transparency and broadly correct geometry, but all newly rendered Chinese text showed severe blocky/mosaic blur resembling low-bitrate video. The full-screen REDO4 raster is therefore **FAIL / REJECTED** and must not become the next cumulative Mother.
-2. Right-side fleet annotation was too close to the safe boundary. Replacement wording is locked for the next candidate:
-   - line 1: `当前舰队旗舰`
-   - line 2: `（秘书舰）`
-3. `TutorialGuide1` displayed the previous body string with the `键` glyph missing on hardware. The desired replacement body is:
-   - line 1: `按下` + native R-button sprite + `键`
-   - line 2: `即可前往旗舰提督室！`
-   The R sprite should be positioned as a real UI element rather than approximated with spaces if needed.
-4. `TutorialGuide1` title may remain `前往旗舰提督室界面` with `旗舰提督室` highlighted green unless later reopened.
+`按【 R 】键`
 
-Because REDO4 failed hardware visual quality, the next M001 candidate must again start from **v0.01 FINAL** `resources.assets` SHA-256:
+Do not use:
 
-`f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8`
+- `按 【R】 键`
+- `按 【 R 】 键`
 
-Do not patch on top of REDO4.
+There are no outside spaces. Breathing room is placed only inside the full-width brackets.
 
-### Corrected strict RCA — full-screen tutorial mosaic blur
+## FINAL translated text
 
-The earlier explanation that the extra inverse-affine transform was the main cause was incomplete. Controlled A/B testing on 2026-08-24 identifies two primary causes and two secondary contributors.
+### Shared labels
 
-#### PRIMARY #1 — Pillow DXT5 encoder quality
+Title:
 
-Using the **exact same REDO4 uncompressed raster** in the body-text region:
+- `战略界面`
+- `说明`
 
-- Pillow DXT5: RGB MAE `14.46`, Alpha MAE `3.54`, PSNR `22.04 dB`
-- ImageMagick DXT5: RGB MAE `11.45`, Alpha MAE `0.75`, PSNR `24.78 dB`
+Left:
 
-This is an encoder-only comparison; layout and source pixels are identical.
+- `回合信息`
+- `战略指令`
+- `资源/资材信息`
 
-A stronger control test used the untouched original Japanese `info1_set` decoded texture and compressed it one extra generation without editing any pixels:
+Right:
 
-- Pillow DXT5: RGBA MAE `2.16`, Alpha MAE `3.20`, PSNR `31.41 dB`
-- ImageMagick DXT5: RGBA MAE `0.47`, Alpha MAE `0.42`, PSNR `48.41 dB`
+- `海域区域名`
+- `当前舰队旗舰`
+- `（秘书舰）`
+- `舰队图标`
 
-Therefore Pillow's DXT5 encoder is formally rejected for these dense text textures. It adds materially more generation loss even to the original Japanese artwork.
+The central example screenshot's native Japanese UI is not redundantly translated.
 
-#### PRIMARY #2 — too many antialias/interpolation colors per BC3 block
+### Page 1 body
 
-REDO4's supersampled/resampled text produces a very high number of intermediate RGB edge colors before compression.
+```text
+战略界面是《舰队Collection 改》的核心界面。
+在这里可让舰队出击至作战海域、向相邻海域移动，
+并可配置运输船等，以获取资源、确保兵站补给。
+```
 
-For 4×4 blocks touched by body text:
+Blue emphasis must include:
 
-- REDO4 supersampled raster: median `13` distinct RGB colors/block; P90 `16`
-- Native 1× hinted test raster: median `7`; P90 `12`
+- `战略界面`
+- `出击`
+- `移动`
+- `配置`
 
-BC3's color payload is BC1-like and can represent only **4 RGB colors per 4×4 block**. The REDO4 raster therefore forces aggressive color collapse of white fill, gray outline, cyan emphasis, blue background, and multiple antialias shades. This is the direct mechanism behind the visible low-bitrate/mosaic appearance.
+`出击` is an explicit QC gate because it was accidentally left white in an earlier failed candidate.
 
-With native-pixel/hinted text plus ImageMagick DXT5, the same test body region improves further to:
+### Page 2 body
 
-- RGB MAE `8.06`
-- Alpha MAE `0.44`
-- PSNR `26.63 dB`
+```text
+从战略界面可前往舰队旗舰所在的旗舰提督室，
+按【 R 】键即可移动。
+```
 
-This proves that reducing pre-BC3 edge-color complexity matters independently from changing the encoder.
+Blue emphasis:
 
-#### CONTRIBUTOR — dense/fine CJK geometry
+- `战略界面`
+- `旗舰提督室`
+- `【 R 】`
 
-Supporting measurement from the source-space body mask:
+## REDO4 failure and corrected RCA — historical record
 
-- original Japanese mean effective mask thickness: approximately `3.53 px`, P90 `7.00 px`
-- REDO4 Chinese: approximately `3.01 px`, P90 `5.79 px`
+REDO4 reached hardware with acceptable transparency and broad geometry, but newly rendered Chinese text showed severe low-bitrate/mosaic-like blockiness. It is rejected and must never be used as a cumulative Mother.
 
-Chinese strings also contain more dense high-frequency stroke transitions. That makes block quantization more visible. This does **not** justify changing font height or compressing text width; any weight/hinting adjustment must preserve the already approved game-space typography geometry.
+Controlled testing isolated two primary causes:
 
-#### SECONDARY — game non-uniform scaling
+1. Pillow DXT5 encoder quality was materially worse than ImageMagick DXT5 on the same raster.
+2. Supersampled antialiasing generated too many intermediate colors for BC3 4×4 blocks, whose RGB payload can represent only four colors per block.
 
-The measured `X≈0.93745 / Y≈1.12702` game transform magnifies codec damage that already exists after BC3 decode. It is not the primary source of the mosaic artifact.
+Representative measurements:
 
-#### Ruled out as root causes
+- REDO4 same-raster Pillow: RGB MAE ~`14.46`, Alpha MAE ~`3.54`, PSNR ~`22.04 dB`
+- REDO4 same-raster ImageMagick: RGB MAE ~`11.45`, Alpha MAE ~`0.75`, PSNR ~`24.78 dB`
+- untouched Japanese one-generation Pillow recompress: PSNR ~`31.41 dB`
+- untouched Japanese one-generation ImageMagick recompress: PSNR ~`48.41 dB`
+- REDO4 text blocks: median ~`13` distinct RGB colors/block; P90 ~`16`
 
-- Clean-plate transparency: hardware transparency is visually correct.
-- Overall 1024×512 texture resolution: the original Japanese text is sharp at the same texture resolution.
-- Vita screenshot/capture quality: original Japanese text in the same hardware capture remains substantially cleaner.
-- Layout/line spacing: REDO3 geometry was user-approved before the sharpness failure was isolated.
+The project therefore stopped trying to rescue these two pages inside BC3.
 
-### Mandatory replacement rendering/encoding pipeline
+## FINAL RGBA32 rendering strategy
 
-The previous `high-resolution source-direct + Pillow DXT5` concept is superseded. High-resolution supersampling alone does not solve this issue and can increase intermediate edge colors.
+The accepted M001 solution is:
 
-For the next candidate:
+- V12 background retained;
+- text layer rendered with `8×` supersampling;
+- a single Lanczos downsample to `1024×512`;
+- final Texture2D stored as `RGBA32` (`TextureFormat = 4`);
+- no BC3/DXT5 re-encoding for these two pages.
 
-1. start from the accepted V12 clean plate and **v0.01 FINAL** Mother;
-2. retain the approved REDO3 font heights, baselines, line spacing, anchors, title hierarchy, and natural Chinese width;
-3. rasterize dense baked CJK text with source-pixel-aware/hinted geometry that minimizes unnecessary intermediate edge colors;
-4. avoid whole-page or 1× screen inverse-affine rasterization;
-5. avoid gratuitous high-order supersampling/downsampling if it increases per-block color complexity;
-6. use a higher-quality BC3 encoder; **Pillow DXT5 is prohibited for this component**;
-7. after encoding, decode the actual BC3 payload and inspect at normal game orientation;
-8. run measured Vita-transform simulation;
-9. produce 3× or greater nearest-neighbor comparison against the previous hardware failure and original Japanese reference;
-10. only then package a Vita candidate.
+The user judged this candidate visually superior to the original, and the exact package subsequently passed PSV Vita hardware testing.
 
-Current corrected status: **RCA COMPLETE / replacement raster+encoder candidate not yet hardware validated**.
+## RGBA32 SerializedFile rebuild
 
-### Current next-candidate text decisions
+Unity version: `5.2.2p3`
 
-Full-screen pages:
+`resources.assets` is SerializedFile v15. Its object table stores explicit `byteStart` and `byteSize` values.
 
-- right-side annotation: `当前舰队旗舰` / `（秘书舰）`;
-- all other REDO3-approved wording, color emphasis, font heights, baselines, line spacing, and title hierarchy remain frozen unless explicitly reopened.
+Per converted Texture2D:
 
-TutorialGuide1 body:
+- old DXT5: 76-byte header + `524,288` payload
+- new RGBA32: 76-byte header + `2,097,152` payload
+- new object size: `2,097,228`
+- net growth: `0x180000`
 
-- line 1: `按下` + native R-button sprite + `键`
+Compatibility evidence already existed in the same original game file: `header_bg2`, PathID `434`, uses TextureFormat `4` RGBA32.
+
+The final structured rebuild preserves:
+
+- object count;
+- PathIDs;
+- dataOffset;
+- target object identity;
+- non-target object bytes;
+- gaps;
+- expected downstream byteStart shifts only;
+- zero unexpected metadata differences.
+
+PSV Vita successfully loaded the rebuilt file, so this RGBA32 SerializedFile reconstruction method is now Vita-proven.
+
+## TutorialGuide1
+
+File: `resources.assets`
+
+- Prefab root `TutorialGuide1`: PathID `29580`
+- `Atlas_TutorialGuide`: PathID `1886` — unchanged
+- Title UILabel: PathID `59638`
+- Body UILabel: PathID `58051`
+- R ButtonGuide uses the native `btn_R_l` Sprite
+
+Final title:
+
+`前往旗舰提督室界面`
+
+`旗舰提督室` is highlighted green.
+
+Final body visual structure:
+
+- line 1: `按下` + native R Sprite + `键`
 - line 2: `即可前往旗舰提督室！`
 
-The previous missing `键` is now a dedicated hardware glyph gate: a future Vita candidate cannot PASS merely because the serialized string contains `键`; the glyph itself must visibly render on hardware.
+Do not replace the native R Sprite with textual `【 R 】` here; it is a real UI element positioned between `按下` and `键`.
+
+## Dynamic-font `键` glyph fix
+
+An earlier candidate serialized the character `键` correctly but rendered it blank on Vita. Therefore serialized string correctness is not sufficient hardware evidence.
+
+Final fix in `sharedassets2.assets`:
+
+- donor: true Simplified Chinese `键` outline from the UD Shin Go Pro font resource in `sharedassets3`
+- target unused glyph: `cid15443`
+- new mapping: `U+952E 键 → cid15443`
+- existing ~9811 Unicode mappings preserved
+- only U+952E mapping added
+- all other glyph outlines preserved
+- glyph metrics preserved
+- Traditional `鍵` remains unchanged
+
+Do not regress to an alias-based `键 → 鍵` workaround.
+
+The exact final package passed Vita hardware testing, so the true-Simplified `键` glyph transplant is `VITA PASS / ACCEPTED`.
+
+## Installer notes retained from M001
+
+Two wrapper failures are permanently recorded:
+
+1. CMD must be ASCII/no BOM; UTF-8 BOM caused `´╗┐@echo off`.
+2. PowerShell must use descriptive hash helpers such as `Get-Sha256Hex` / `Get-BytesSha256Hex`; do not use a one-letter `H` function that can collide with shell aliases/history.
+
+The final RGBA32 candidate followed these rules and was successfully used on Vita.
+
+## M001 final disposition
+
+**M001 = PSV Vita HARDWARE PASS / ACCEPTED / LOCKED.**
+
+Historical REDO/BC3 failures remain useful RCA evidence but are superseded as active development state.
+
+Next development work should begin as M002 from the cumulative M001 Vita-PASS file set above.

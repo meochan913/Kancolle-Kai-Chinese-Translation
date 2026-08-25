@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "project": "Kancolle-Kai-Chinese-Translation",
   "title_id": "PCSG00684",
   "target_game_version": "1.02",
@@ -16,6 +16,19 @@
     "source_qc_commit": "a9a0ddf7bd0059751178dd062620d7209f4581e6",
     "github_actions_run_id": "32681364998",
     "publication_status": "PASS"
+  },
+  "development": {
+    "version": "v0.02",
+    "formal_release_created": false,
+    "current_component": "M001",
+    "current_component_title": "Strategy Intro Tutorial RGBA32",
+    "current_component_status": "VITA_PASS_FINAL_LOCKED",
+    "hardware_validation_date": "2026-08-24",
+    "exact_vita_tested_package": "Kancolle_Kai_v0.02_M001_RGBA32_VITA_CANDIDATE.zip",
+    "exact_vita_tested_package_sha256": "2e0f1a312dbf4f0618ac2860aa4ee72943045c79253ae69912e0bd8cdcf22eb8",
+    "next_component": "M002",
+    "next_component_rule": "Start from the cumulative M001 Vita-PASS development Mother; do not restart from v0.01 FINAL unless deliberately rebuilding M001.",
+    "release_normalization_rule": "Before formal v0.02 publication, reconstruct deterministic single-step clean-1.02-to-v0.02-FINAL patches and independently replay them byte-for-byte."
   },
   "policy": {
     "single_source_of_truth": true,
@@ -38,10 +51,24 @@
     "sharedassets5.assets": {"mother_sha256":"1c483cf3f68ddf7bf4693094a21468c95ca3287815204f8fdf1ced8a23b5aae0","output_sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","mother_size":54898340,"output_size":54898340,"patch":"patches/v0.01/sharedassets5.assets.kckpatch","patch_mode":"overwrite","status":"VITA_VALIDATED_FINAL"},
     "sharedassets6.assets": {"mother_sha256":"914b586adcb0f28cbb7cc127d4032d8b0728c5d64e15ac85b20781533ed8a2a0","output_sha256":"f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487","mother_size":3014252,"output_size":3014220,"patch":"patches/v0.01/sharedassets6.assets.kckpatch","patch_mode":"rebuild","status":"VITA_VALIDATED_FINAL"}
   },
+  "development_current_files": {
+    "level2": {"sha256":"e4620fba82e4b50124c412d5a885ca9255be9e8590b3db0ec080122762bb2e73","size":31308,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
+    "level5": {"sha256":"9d83c6183e0cb4d064d2bc69199059396c0f5d06e970c335777a37749ee9fff5","size":36416,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
+    "Managed/Assembly-CSharp.dll": {"sha256":"ae2b1f2a6c008f05f19ad10dd4a7c963ef8b5294d2e8d3b538b387370149d90e","size":4857856,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
+    "resources.assets": {"sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","size":1281469816,"source_component":"v0.02 M001","development_mother_sha256":"f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8","status":"VITA_PASS_FINAL_LOCKED"},
+    "sharedassets2.assets": {"sha256":"80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d","size":3382312,"source_component":"v0.02 M001","development_mother_sha256":"7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61","status":"VITA_PASS_FINAL_LOCKED"},
+    "sharedassets3.assets": {"sha256":"05474b778394a89e3f11f3081418a6256fda1a7a16ff23d702279713fa83638b","size":7131440,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
+    "sharedassets5.assets": {"sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","size":54898340,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
+    "sharedassets6.assets": {"sha256":"f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487","size":3014220,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"}
+  },
   "locked_components": [
     {"id":"tutorial-body-visibleblue-final","file":"sharedassets6.assets","output_sha256":"f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487","status":"VITA_PASS_FINAL"},
     {"id":"tutorial-fairy-bubbles-final","file":"resources.assets","output_sha256":"f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8","status":"VITA_PASS_FINAL"},
-    {"id":"receiveship-next-final-l1u1","file":"sharedassets5.assets","path_id":224,"game_space_offset_px":{"x":-1,"y":-1},"output_sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","status":"VITA_PASS_FINAL"}
+    {"id":"receiveship-next-final-l1u1","file":"sharedassets5.assets","path_id":224,"game_space_offset_px":{"x":-1,"y":-1},"output_sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","status":"VITA_PASS_FINAL"},
+    {"id":"v002-m001-strategy-info1-rgba32","file":"resources.assets","path_id":4363,"texture_name":"info1_set","texture_format":4,"dimensions":"1024x512","output_sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","status":"VITA_PASS_FINAL_LOCKED"},
+    {"id":"v002-m001-strategy-info2-rgba32","file":"resources.assets","path_id":2180,"texture_name":"info2_set","texture_format":4,"dimensions":"1024x512","output_sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","status":"VITA_PASS_FINAL_LOCKED"},
+    {"id":"v002-m001-tutorialguide1","file":"resources.assets","prefab_path_id":29580,"title_uilabel_path_id":59638,"body_uilabel_path_id":58051,"atlas_path_id":1886,"atlas_modified":false,"output_sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","status":"VITA_PASS_FINAL_LOCKED"},
+    {"id":"v002-m001-simplified-jian-glyph","file":"sharedassets2.assets","unicode":"U+952E","character":"键","target_glyph":"cid15443","traditional_alias_used":false,"output_sha256":"80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d","status":"VITA_PASS_FINAL_LOCKED"}
   ],
-  "historical_note": "Development RC/intermediate Mother hashes are intentionally excluded from public installation prerequisites. Public v0.01 always starts from clean 1.02."
+  "historical_note": "Development RC/intermediate Mother hashes are intentionally excluded from public installation prerequisites. Public v0.01 always starts from clean 1.02. v0.02 M001 development is cumulative from v0.01 FINAL, while a future formal v0.02 release must be normalized back to clean 1.02 -> v0.02 FINAL deterministic patches."
 }

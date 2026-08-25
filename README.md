@@ -5,6 +5,8 @@
 > 当前正式版本：**v0.01 — Pre-Game Translation Milestone**
 >
 > 截至 2026-08-23，正式进入游戏前的玩家可见内容已经完成汉化，并经过 PSV Vita 实机验证。
+>
+> 当前开发线：**v0.02**。M001「战略界面教程」已于 2026-08-24 完成 RGBA32 方案并通过 PSV Vita 实机验证，状态为 **VITA PASS / LOCKED**；v0.02 尚未正式发布。
 
 ## 下载
 
@@ -36,7 +38,9 @@ Release 页面同时提供 `Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt`。
 | 教程三页正文 | ✅ FINAL / Vita PASS |
 | 教程妖精气泡 | ✅ FINAL / Vita PASS |
 | ReceiveShip「续」按钮 | ✅ FINAL / Vita PASS |
-| 正式进入母港后的游戏内容 | 🚧 下一阶段 |
+| v0.02 M001 战略界面两页教程（RGBA32） | ✅ FINAL / Vita PASS / LOCKED |
+| v0.02 M001 TutorialGuide1 + 真简体「键」glyph | ✅ FINAL / Vita PASS / LOCKED |
+| 正式进入母港后的游戏内容 | 🚧 v0.02 后续阶段 |
 
 ## 项目原则
 
@@ -78,17 +82,21 @@ v0.01 使用 **clean 1.02 → FINAL Vita-validated** 单步 patch。当前版本
 
 详见 [`docs/INSTALL.md`](docs/INSTALL.md)；干净 1.02 输入哈希见 [`docs/SOURCE_BASELINE.md`](docs/SOURCE_BASELINE.md)。
 
+v0.02 当前仍为开发状态。开发阶段从最新累计 Vita-PASS Mother 继续叠加；正式发布前会重新 normalize 为 **clean 1.02 → v0.02 FINAL** 的确定性单步 patch，不公开历史 RC 累计链。
+
 ## QC
 
 本项目采用 fail-closed QC：任一关键 gate 失败、关键输入缺失、或视觉目标未实际改善时，不允许标记为 PASS。
 
 v0.01 的 8 个 patch 已从 clean 1.02 独立 replay，生成结果与 Vita 验证后的累计 `rePatch` 文件逐字节一致。仓库端 payload 也已完成独立完整性核验。
 
+v0.02 M001 记录了 source-to-game 非等比几何、翻译行宽规则、标题层级、特殊符号 spacing、BC3 encoder/color-complexity RCA、动态 glyph gate，以及最终 Vita-proven RGBA32 SerializedFile structured rebuild。详见 [`docs/V002_DEVELOPMENT.md`](docs/V002_DEVELOPMENT.md) 与 [`docs/QC_POLICY.md`](docs/QC_POLICY.md)。
+
 ## 当前阶段
 
-**v0.01 已正式发布。**
+**v0.01 已正式发布。v0.02 M001 已 Vita PASS / LOCKED。**
 
-下一阶段将进入正式母港后的游戏 UI 汉化，版本线进入 `v0.02` 开发阶段。
+后续开发从 M001 cumulative Vita-PASS 状态继续，进入 M002 / 正式母港与游戏 UI 汉化。
 
 ## Credits
 

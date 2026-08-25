@@ -116,16 +116,54 @@ Prefer source-pixel-aware/hinted rasterization and the smallest number of necess
 
 ### Sharpness evidence gate
 
-When sharpness is a concern, required evidence should include:
+When sharpness is a concern for a lossy texture path, required evidence should include:
 
 - uncompressed source candidate;
-- actual BC3 roundtrip decode from the selected encoder;
+- actual codec roundtrip decode from the selected encoder;
 - simulated/measured game transform;
 - 3× or greater nearest-neighbor OLD/NEW pixel comparison;
-- inspection for 4×4 block color bleeding, mosaic artifacts, low-bitrate-like smearing, and softened CJK strokes;
+- inspection for block color bleeding, mosaic artifacts, low-bitrate-like smearing, and softened CJK strokes;
 - encoder A/B comparison when the codec may be implicated.
 
 A texture that is structurally valid but visibly blocky or blurry is `FAIL`.
+
+## RGBA32 structured-rebuild gate
+
+Lossy BC3 is not mandatory when the target game and file format demonstrably support an uncompressed format and the structured rebuild can be proven correct.
+
+v0.02 M001 established a Vita-proven RGBA32 path for `resources.assets` SerializedFile v15 under Unity `5.2.2p3`.
+
+For any future Texture2D format conversion or object growth using this method, required binary evidence includes:
+
+- target object identity and PathID preserved;
+- object count preserved;
+- expected TextureFormat and image byte size recorded;
+- SerializedFile `dataOffset` preserved unless there is a documented reason to change it;
+- target `byteSize` updated correctly;
+- all downstream `byteStart` values shifted by exactly the required cumulative growth;
+- non-target object bytes preserved byte-for-byte where expected;
+- inter-object gaps/padding preserved where expected;
+- unexpected metadata differences = 0;
+- reconstructed file hash and size recorded;
+- exact candidate tested on PSV Vita before `VITA PASS`.
+
+For the accepted M001 conversion:
+
+- `info1_set`, PathID `4363`: DXT5/BC3 → RGBA32
+- `info2_set`, PathID `2180`: DXT5/BC3 → RGBA32
+- dimensions remain `1024×512`
+- payload changes from `524,288` to `2,097,152` bytes per texture
+- object size changes from `524,364` to `2,097,228`
+- net growth is `0x180000` per converted object
+- original `resources.assets` already contained RGBA32 `header_bg2`, PathID `434`, providing in-game format compatibility evidence
+
+The exact final rebuilt `resources.assets` SHA-256 is:
+
+`fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e`
+
+This file passed PSV Vita hardware validation on 2026-08-24. The method is therefore **Vita-proven for this file/version**, not merely structurally plausible.
+
+The BC3 encoder/color-complexity RCA remains a permanent QC lesson, but the accepted M001 full-screen pages themselves no longer use BC3.
 
 ## Dynamic-font / glyph gate
 
@@ -133,16 +171,43 @@ For runtime UILabel or other dynamic-font text, a serialized string containing t
 
 If a character has previously disappeared, rendered blank, or been substituted on Vita, that character becomes an explicit hardware glyph gate. The exact character must be visibly present in a hardware screenshot before the component can be marked `VITA PASS`.
 
-Example: in v0.02 M001 `TutorialGuide1`, the character `键` disappeared on hardware in a previous candidate. Future candidates containing `键` must visibly render the glyph; otherwise the build is `FAIL` even when the serialized text itself is correct.
+Example: in v0.02 M001 `TutorialGuide1`, the character `键` disappeared on hardware in a previous candidate.
+
+The accepted fix uses a true Simplified Chinese glyph outline rather than a Traditional alias:
+
+- `U+952E 键 → cid15443`
+- donor outline from the UD Shin Go Pro Simplified Chinese font resource
+- Traditional `鍵` is not modified
+- exact final `sharedassets2.assets` SHA-256: `80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d`
+
+The exact final candidate visibly rendered `键` on Vita and passed hardware validation. This mapping is therefore `VITA PASS / ACCEPTED` and must not regress to `键 → 鍵` aliasing.
 
 ## Hardware gate
 
 `VITA PASS` may only be assigned after the exact candidate binary is tested successfully on PSV Vita.
 
-## v0.02 M001 rejection notes
+A hardware PASS applies to the exact validated output hashes. Any later binary modification reopens the affected gate unless independent evidence proves the change cannot affect it.
+
+## v0.02 M001 historical failures and final disposition
 
 The first `Strategy Tutorial` M001 candidate derived from v0.01 `resources.assets` (`f19fbcf5...fce8`) was rejected because source-to-game non-uniform stretch and original line-spacing/layout were not validated before packaging.
 
-REDO4 was later tested on hardware. Its transparency and overall layout were broadly acceptable, but the two full-screen Chinese tutorial pages showed severe blocky/mosaic blur. REDO4 is therefore also rejected as a cumulative development baseline.
+REDO4 was later tested on hardware. Its transparency and overall layout were broadly acceptable, but the two full-screen Chinese tutorial pages showed severe blocky/mosaic blur. REDO4 is rejected as a cumulative development baseline.
 
-Strict RCA later showed the main causes were not transparency or layout. The primary causes were poor Pillow DXT5 roundtrip quality and excessive pre-BC3 edge-color complexity from the rasterization pipeline; non-uniform game scaling was secondary. The next candidate must again start from v0.01 FINAL and use the corrected rasterization + encoder policy above.
+Strict RCA showed the main causes were poor Pillow DXT5 roundtrip quality and excessive pre-BC3 edge-color complexity from the rasterization pipeline; non-uniform game scaling was secondary.
+
+The final accepted M001 superseded the failed BC3 path by using the V12 clean background plus SS8 text-layer rendering, one Lanczos downsample to `1024×512`, and RGBA32 Texture2D storage for `info1_set` and `info2_set`. `TutorialGuide1` also received the true Simplified `键` glyph transplant described above.
+
+Exact Vita-tested package:
+
+`Kancolle_Kai_v0.02_M001_RGBA32_VITA_CANDIDATE.zip`
+
+SHA-256:
+
+`2e0f1a312dbf4f0618ac2860aa4ee72943045c79253ae69912e0bd8cdcf22eb8`
+
+Final status as of 2026-08-24:
+
+**v0.02 M001 = PSV Vita HARDWARE PASS / ACCEPTED / LOCKED.**
+
+Future M002 development must use the M001 cumulative Vita-PASS files as its development Mother. A future formal v0.02 release must still be normalized to deterministic clean-1.02 → v0.02 FINAL patches and independently replayed byte-for-byte.
