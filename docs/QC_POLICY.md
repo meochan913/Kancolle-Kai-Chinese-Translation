@@ -37,6 +37,43 @@ For source-based UI/text replacements, final visual QC must include, as applicab
 - stretch/aspect comparison;
 - target-region absolute diff.
 
+### Reference-glyph redraw calibration rule
+
+When an original UI label and its Chinese replacement contain one or more identical characters, or when another nearby original glyph can act as a trustworthy typography reference, those glyphs should be used as **calibration anchors**, not preserved raster fragments.
+
+If the target label is being rebuilt, do **not** keep/copy the original pixels of an unchanged character merely because that code point remains the same. The full original text region should be cleaned and the **entire translated line should be redrawn through one consistent rendering pipeline**.
+
+Required calibration method when practical:
+
+1. Choose several representative original glyphs that also exist in the target rendering pipeline. Prefer references with different stroke structures rather than relying on only one glyph.
+2. Redraw those same reference glyphs from font/vector outlines using the exact candidate rasterization, weight, bevel/outline/shadow, and antialiasing pipeline intended for the translated UI.
+3. Compare `original reference glyph → redrawn same glyph → 50% overlay` in the correct source/game geometry.
+4. Adjust shared/global typography parameters until the **redrawn** reference glyphs nearly match the original visible size and stroke weight. Relevant parameters include font size, font weight or controlled synthetic weight, horizontal/vertical scale only when justified, baseline/midline, character advance/tracking, and effect geometry.
+5. Once calibrated, freeze the shared parameters and apply them to **all glyphs in that line/component**, including characters whose translation did not change.
+6. If missing Simplified Chinese glyphs require a donor font/outline source, normalize the donor glyph metrics/weight to the calibrated line rather than independently positioning each donor character.
+
+Per-glyph bounding boxes are a **measurement tool**, not an instruction to vertically center every glyph independently. A multi-character label must remain a coherent line: use one shared baseline or visual midline and a deliberate character advance/tracking model for the whole label.
+
+For v0.02 M002 PortTop shortcut-menu calibration, the explicit reference set is:
+
+- `工` from `工廠`
+- `成` from `編成`
+- `任` from `任務`
+- `略` from `戦略`
+- `物` from `物資`
+
+These characters are to be redrawn and overlaid against the original to establish size/weight; they are **not** to be cut out of the original atlas and reused in the Chinese raster.
+
+Recommended evidence for this method includes:
+
+- multiple reference-glyph original/redraw/50% overlay comparisons;
+- visible-width/height or stroke-weight measurements;
+- full-line baseline/midline and character-spacing guides;
+- full-label 50% overlay;
+- final game-space inspection after codec/format writeback.
+
+This rule is persistent and should be reused for any future UI/texture work where unchanged or comparable original glyphs can serve as reliable typography calibration anchors.
+
 ### Translation-width rule
 
 **Translated line width is not an overlay target by itself.** Japanese and Chinese strings naturally have different lengths. The Chinese layout must keep normal glyph proportions and must not be horizontally squeezed or expanded merely to reproduce the original Japanese line width.
