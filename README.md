@@ -6,7 +6,7 @@
 >
 > 截至 2026-08-23，正式进入游戏前的玩家可见内容已经完成汉化，并经过 PSV Vita 实机验证。
 >
-> 当前开发线：**v0.02**。M001「战略界面教程」已于 2026-08-24 完成 RGBA32 方案并通过 PSV Vita 实机验证，状态为 **VITA PASS / LOCKED**；v0.02 尚未正式发布。
+> 当前开发线：**v0.02**。M001「战略界面教程」已于 2026-08-24 完成 RGBA32 方案并通过 PSV Vita 实机验证，状态为 **VITA PASS / LOCKED**。M002「母港快捷菜单」V4.25R2 已完成视觉定稿与 RGBA32 writeback 测试包，正在等待 exact Mother replay 与 PSV Vita 验证；v0.02 尚未正式发布。
 
 ## 下载
 
@@ -40,7 +40,8 @@ Release 页面同时提供 `Kancolle_Kai_CHS_v0.01_SHA256SUMS.txt`。
 | ReceiveShip「续」按钮 | ✅ FINAL / Vita PASS |
 | v0.02 M001 战略界面两页教程（RGBA32） | ✅ FINAL / Vita PASS / LOCKED |
 | v0.02 M001 TutorialGuide1 + 真简体「键」glyph | ✅ FINAL / Vita PASS / LOCKED |
-| 正式进入母港后的游戏内容 | 🚧 v0.02 后续阶段 |
+| v0.02 M002 母港快捷菜单（RGBA32 V4.25R2） | 🎨 Visual FINAL / writeback package ready / Vita pending |
+| 正式进入母港后的其他游戏内容 | 🚧 v0.02 后续阶段 |
 
 ## 项目原则
 
@@ -92,11 +93,11 @@ v0.01 的 8 个 patch 已从 clean 1.02 独立 replay，生成结果与 Vita 验
 
 v0.02 M001 记录了 source-to-game 非等比几何、翻译行宽规则、标题层级、特殊符号 spacing、BC3 encoder/color-complexity RCA、动态 glyph gate，以及最终 Vita-proven RGBA32 SerializedFile structured rebuild。详见 [`docs/V002_DEVELOPMENT.md`](docs/V002_DEVELOPMENT.md) 与 [`docs/QC_POLICY.md`](docs/QC_POLICY.md)。
 
+v0.02 M002 把“复刻原文感觉”进一步固定成可复用方法：所有字统一重绘；用原版同字 reference glyph 做 redraw/overlay 校准；整行统一 baseline/spacing；按原版测量内凹/刻蚀锐利度；按最终可见像素并考虑 compositing 反推文字主体颜色。详见 [`docs/M002_PORTTOP.md`](docs/M002_PORTTOP.md)。
+
 ## 当前阶段
 
-**v0.01 已正式发布。v0.02 M001 已 Vita PASS / LOCKED。**
-
-后续开发从 M001 cumulative Vita-PASS 状态继续，进入 M002 / 正式母港与游戏 UI 汉化。
+**v0.01 已正式发布。v0.02 M001 已 Vita PASS / LOCKED；M002 V4.25R2 已视觉定稿，等待 exact Mother replay 与 Vita 验证。**
 
 ## Credits
 

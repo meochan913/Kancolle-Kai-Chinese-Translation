@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "project": "Kancolle-Kai-Chinese-Translation",
   "title_id": "PCSG00684",
   "target_game_version": "1.02",
@@ -20,14 +20,14 @@
   "development": {
     "version": "v0.02",
     "formal_release_created": false,
-    "current_component": "M001",
-    "current_component_title": "Strategy Intro Tutorial RGBA32",
-    "current_component_status": "VITA_PASS_FINAL_LOCKED",
-    "hardware_validation_date": "2026-08-24",
-    "exact_vita_tested_package": "Kancolle_Kai_v0.02_M001_RGBA32_VITA_CANDIDATE.zip",
-    "exact_vita_tested_package_sha256": "2e0f1a312dbf4f0618ac2860aa4ee72943045c79253ae69912e0bd8cdcf22eb8",
-    "next_component": "M002",
-    "next_component_rule": "Start from the cumulative M001 Vita-PASS development Mother; do not restart from v0.01 FINAL unless deliberately rebuilding M001.",
+    "current_component": "M002",
+    "current_component_title": "PortTop Shortcut Menu RGBA32",
+    "current_component_status": "VISUAL_FINAL_WRITEBACK_PACKAGE_READY_EXACT_MOTHER_REPLAY_PENDING_VITA_PENDING",
+    "current_component_doc": "docs/M002_PORTTOP.md",
+    "previous_component": "M001",
+    "previous_component_status": "VITA_PASS_FINAL_LOCKED",
+    "next_component": "M003",
+    "next_component_rule": "Do not advance the cumulative Mother past M002 until the exact c43eed5a... sharedassets5 Mother has been replayed, the exact M002 full-file output SHA-256 is recorded, and the exact output has passed PSV Vita hardware validation.",
     "release_normalization_rule": "Before formal v0.02 publication, reconstruct deterministic single-step clean-1.02-to-v0.02-FINAL patches and independently replay them byte-for-byte."
   },
   "policy": {
@@ -42,33 +42,247 @@
   },
   "release_manifest": "manifests/v0.01.json",
   "current_files": {
-    "level2": {"mother_sha256":"1baf870b0bfded8c6298c133ccd63aba434009d88deeabba7333fd1f7b07ed07","output_sha256":"e4620fba82e4b50124c412d5a885ca9255be9e8590b3db0ec080122762bb2e73","mother_size":31308,"output_size":31308,"patch":"patches/v0.01/level2.kckpatch","patch_mode":"overwrite","status":"VITA_VALIDATED_FINAL"},
-    "level5": {"mother_sha256":"c2739e6fd7440b200d44b46a492c3e9bb337302a1cc9ba92a01963f971be093b","output_sha256":"9d83c6183e0cb4d064d2bc69199059396c0f5d06e970c335777a37749ee9fff5","mother_size":36444,"output_size":36416,"patch":"patches/v0.01/level5.kckpatch","patch_mode":"rebuild","status":"VITA_VALIDATED_FINAL"},
-    "Managed/Assembly-CSharp.dll": {"mother_sha256":"cb74f8991c7d80f7519b028581753acd006b488f8d160613dc6b215015362327","output_sha256":"ae2b1f2a6c008f05f19ad10dd4a7c963ef8b5294d2e8d3b538b387370149d90e","mother_size":4857856,"output_size":4857856,"patch":"patches/v0.01/Assembly-CSharp.dll.kckpatch","patch_mode":"overwrite","status":"VITA_VALIDATED_FINAL"},
-    "resources.assets": {"mother_sha256":"7845a58df2c72ff15fe72ebf134050bb4cc660e5de10274b317da4e9f62c72f4","output_sha256":"f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8","mother_size":1278324088,"output_size":1278324088,"patch":"patches/v0.01/resources.assets.kckpatch","patch_mode":"overwrite","status":"VITA_VALIDATED_FINAL"},
-    "sharedassets2.assets": {"mother_sha256":"7a799248d4e73c87d56fc047026921161ed1f2eb3b9bd57afe33afa0a4e643fc","output_sha256":"7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61","mother_size":3380708,"output_size":3387696,"patch":"patches/v0.01/sharedassets2.assets.kckpatch","patch_mode":"rebuild","status":"VITA_VALIDATED_FINAL"},
-    "sharedassets3.assets": {"mother_sha256":"dc1ee9c49058fb7f582c6c36ba076e2dfc4c50107f2d6350f026d0e4c25d9ec1","output_sha256":"05474b778394a89e3f11f3081418a6256fda1a7a16ff23d702279713fa83638b","mother_size":7131440,"output_size":7131440,"patch":"patches/v0.01/sharedassets3.assets.kckpatch","patch_mode":"overwrite","status":"VITA_VALIDATED_FINAL"},
-    "sharedassets5.assets": {"mother_sha256":"1c483cf3f68ddf7bf4693094a21468c95ca3287815204f8fdf1ced8a23b5aae0","output_sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","mother_size":54898340,"output_size":54898340,"patch":"patches/v0.01/sharedassets5.assets.kckpatch","patch_mode":"overwrite","status":"VITA_VALIDATED_FINAL"},
-    "sharedassets6.assets": {"mother_sha256":"914b586adcb0f28cbb7cc127d4032d8b0728c5d64e15ac85b20781533ed8a2a0","output_sha256":"f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487","mother_size":3014252,"output_size":3014220,"patch":"patches/v0.01/sharedassets6.assets.kckpatch","patch_mode":"rebuild","status":"VITA_VALIDATED_FINAL"}
+    "level2": {
+      "mother_sha256": "1baf870b0bfded8c6298c133ccd63aba434009d88deeabba7333fd1f7b07ed07",
+      "output_sha256": "e4620fba82e4b50124c412d5a885ca9255be9e8590b3db0ec080122762bb2e73",
+      "mother_size": 31308,
+      "output_size": 31308,
+      "patch": "patches/v0.01/level2.kckpatch",
+      "patch_mode": "overwrite",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "level5": {
+      "mother_sha256": "c2739e6fd7440b200d44b46a492c3e9bb337302a1cc9ba92a01963f971be093b",
+      "output_sha256": "9d83c6183e0cb4d064d2bc69199059396c0f5d06e970c335777a37749ee9fff5",
+      "mother_size": 36444,
+      "output_size": 36416,
+      "patch": "patches/v0.01/level5.kckpatch",
+      "patch_mode": "rebuild",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "Managed/Assembly-CSharp.dll": {
+      "mother_sha256": "cb74f8991c7d80f7519b028581753acd006b488f8d160613dc6b215015362327",
+      "output_sha256": "ae2b1f2a6c008f05f19ad10dd4a7c963ef8b5294d2e8d3b538b387370149d90e",
+      "mother_size": 4857856,
+      "output_size": 4857856,
+      "patch": "patches/v0.01/Assembly-CSharp.dll.kckpatch",
+      "patch_mode": "overwrite",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "resources.assets": {
+      "mother_sha256": "7845a58df2c72ff15fe72ebf134050bb4cc660e5de10274b317da4e9f62c72f4",
+      "output_sha256": "f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8",
+      "mother_size": 1278324088,
+      "output_size": 1278324088,
+      "patch": "patches/v0.01/resources.assets.kckpatch",
+      "patch_mode": "overwrite",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "sharedassets2.assets": {
+      "mother_sha256": "7a799248d4e73c87d56fc047026921161ed1f2eb3b9bd57afe33afa0a4e643fc",
+      "output_sha256": "7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61",
+      "mother_size": 3380708,
+      "output_size": 3387696,
+      "patch": "patches/v0.01/sharedassets2.assets.kckpatch",
+      "patch_mode": "rebuild",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "sharedassets3.assets": {
+      "mother_sha256": "dc1ee9c49058fb7f582c6c36ba076e2dfc4c50107f2d6350f026d0e4c25d9ec1",
+      "output_sha256": "05474b778394a89e3f11f3081418a6256fda1a7a16ff23d702279713fa83638b",
+      "mother_size": 7131440,
+      "output_size": 7131440,
+      "patch": "patches/v0.01/sharedassets3.assets.kckpatch",
+      "patch_mode": "overwrite",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "sharedassets5.assets": {
+      "mother_sha256": "1c483cf3f68ddf7bf4693094a21468c95ca3287815204f8fdf1ced8a23b5aae0",
+      "output_sha256": "c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23",
+      "mother_size": 54898340,
+      "output_size": 54898340,
+      "patch": "patches/v0.01/sharedassets5.assets.kckpatch",
+      "patch_mode": "overwrite",
+      "status": "VITA_VALIDATED_FINAL"
+    },
+    "sharedassets6.assets": {
+      "mother_sha256": "914b586adcb0f28cbb7cc127d4032d8b0728c5d64e15ac85b20781533ed8a2a0",
+      "output_sha256": "f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487",
+      "mother_size": 3014252,
+      "output_size": 3014220,
+      "patch": "patches/v0.01/sharedassets6.assets.kckpatch",
+      "patch_mode": "rebuild",
+      "status": "VITA_VALIDATED_FINAL"
+    }
   },
   "development_current_files": {
-    "level2": {"sha256":"e4620fba82e4b50124c412d5a885ca9255be9e8590b3db0ec080122762bb2e73","size":31308,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
-    "level5": {"sha256":"9d83c6183e0cb4d064d2bc69199059396c0f5d06e970c335777a37749ee9fff5","size":36416,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
-    "Managed/Assembly-CSharp.dll": {"sha256":"ae2b1f2a6c008f05f19ad10dd4a7c963ef8b5294d2e8d3b538b387370149d90e","size":4857856,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
-    "resources.assets": {"sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","size":1281469816,"source_component":"v0.02 M001","development_mother_sha256":"f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8","status":"VITA_PASS_FINAL_LOCKED"},
-    "sharedassets2.assets": {"sha256":"80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d","size":3382312,"source_component":"v0.02 M001","development_mother_sha256":"7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61","status":"VITA_PASS_FINAL_LOCKED"},
-    "sharedassets3.assets": {"sha256":"05474b778394a89e3f11f3081418a6256fda1a7a16ff23d702279713fa83638b","size":7131440,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
-    "sharedassets5.assets": {"sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","size":54898340,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"},
-    "sharedassets6.assets": {"sha256":"f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487","size":3014220,"source_component":"v0.01 FINAL","status":"VITA_PASS_CUMULATIVE_MOTHER"}
+    "level2": {
+      "sha256": "e4620fba82e4b50124c412d5a885ca9255be9e8590b3db0ec080122762bb2e73",
+      "size": 31308,
+      "source_component": "v0.01 FINAL",
+      "status": "VITA_PASS_CUMULATIVE_MOTHER"
+    },
+    "level5": {
+      "sha256": "9d83c6183e0cb4d064d2bc69199059396c0f5d06e970c335777a37749ee9fff5",
+      "size": 36416,
+      "source_component": "v0.01 FINAL",
+      "status": "VITA_PASS_CUMULATIVE_MOTHER"
+    },
+    "Managed/Assembly-CSharp.dll": {
+      "sha256": "ae2b1f2a6c008f05f19ad10dd4a7c963ef8b5294d2e8d3b538b387370149d90e",
+      "size": 4857856,
+      "source_component": "v0.01 FINAL",
+      "status": "VITA_PASS_CUMULATIVE_MOTHER"
+    },
+    "resources.assets": {
+      "sha256": "fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e",
+      "size": 1281469816,
+      "source_component": "v0.02 M001",
+      "development_mother_sha256": "f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8",
+      "status": "VITA_PASS_FINAL_LOCKED"
+    },
+    "sharedassets2.assets": {
+      "sha256": "80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d",
+      "size": 3382312,
+      "source_component": "v0.02 M001",
+      "development_mother_sha256": "7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61",
+      "status": "VITA_PASS_FINAL_LOCKED"
+    },
+    "sharedassets3.assets": {
+      "sha256": "05474b778394a89e3f11f3081418a6256fda1a7a16ff23d702279713fa83638b",
+      "size": 7131440,
+      "source_component": "v0.01 FINAL",
+      "status": "VITA_PASS_CUMULATIVE_MOTHER"
+    },
+    "sharedassets5.assets": {
+      "sha256": "c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23",
+      "size": 54898340,
+      "source_component": "v0.01 FINAL",
+      "status": "CURRENT_M002_REQUIRED_MOTHER_EXACT_OUTPUT_PENDING"
+    },
+    "sharedassets6.assets": {
+      "sha256": "f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487",
+      "size": 3014220,
+      "source_component": "v0.01 FINAL",
+      "status": "VITA_PASS_CUMULATIVE_MOTHER"
+    }
   },
-  "locked_components": [
-    {"id":"tutorial-body-visibleblue-final","file":"sharedassets6.assets","output_sha256":"f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487","status":"VITA_PASS_FINAL"},
-    {"id":"tutorial-fairy-bubbles-final","file":"resources.assets","output_sha256":"f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8","status":"VITA_PASS_FINAL"},
-    {"id":"receiveship-next-final-l1u1","file":"sharedassets5.assets","path_id":224,"game_space_offset_px":{"x":-1,"y":-1},"output_sha256":"c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23","status":"VITA_PASS_FINAL"},
-    {"id":"v002-m001-strategy-info1-rgba32","file":"resources.assets","path_id":4363,"texture_name":"info1_set","texture_format":4,"dimensions":"1024x512","output_sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","status":"VITA_PASS_FINAL_LOCKED"},
-    {"id":"v002-m001-strategy-info2-rgba32","file":"resources.assets","path_id":2180,"texture_name":"info2_set","texture_format":4,"dimensions":"1024x512","output_sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","status":"VITA_PASS_FINAL_LOCKED"},
-    {"id":"v002-m001-tutorialguide1","file":"resources.assets","prefab_path_id":29580,"title_uilabel_path_id":59638,"body_uilabel_path_id":58051,"atlas_path_id":1886,"atlas_modified":false,"output_sha256":"fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e","status":"VITA_PASS_FINAL_LOCKED"},
-    {"id":"v002-m001-simplified-jian-glyph","file":"sharedassets2.assets","unicode":"U+952E","character":"键","target_glyph":"cid15443","traditional_alias_used":false,"output_sha256":"80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d","status":"VITA_PASS_FINAL_LOCKED"}
+  "development_components": [
+    {
+      "id": "v002-m001-strategy-tutorial-rgba32",
+      "title": "Strategy Intro Tutorial RGBA32 + TutorialGuide1 glyph fix",
+      "status": "VITA_PASS_FINAL_LOCKED",
+      "hardware_validation_date": "2026-08-24",
+      "package": "Kancolle_Kai_v0.02_M001_RGBA32_VITA_CANDIDATE.zip",
+      "package_sha256": "2e0f1a312dbf4f0618ac2860aa4ee72943045c79253ae69912e0bd8cdcf22eb8"
+    },
+    {
+      "id": "v002-m002-porttop-shortcut-menu-rgba32",
+      "title": "PortTop Shortcut Menu RGBA32",
+      "doc": "docs/M002_PORTTOP.md",
+      "status": "VISUAL_FINAL_WRITEBACK_PACKAGE_READY_EXACT_MOTHER_REPLAY_PENDING_VITA_PENDING",
+      "visual_revision": "V4.25R2",
+      "user_visual_approval_date": "2026-08-25",
+      "target_file": "sharedassets5.assets",
+      "required_mother_sha256": "c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23",
+      "required_mother_size": 54898340,
+      "target_texture": {
+        "name": "Atlas_ShortCutMenu",
+        "path_id": 367,
+        "material_path_id": 80,
+        "uiatlas_metadata_path_id": 25750,
+        "width": 1024,
+        "height": 1024,
+        "old_format": 12,
+        "new_format": 4,
+        "old_object_size": 1048660,
+        "new_object_size": 4194388,
+        "growth_bytes": 3145728,
+        "source_bc3_payload_sha256": "cb7168657ab5b609ae5bcb1f91de84847748f681481377585c568cc960a8ac46",
+        "reconstructed_rgba32_payload_sha256": "cb65fd1d1e1738ccb54517ee8289f31385faef0a186a41109686b35816124212"
+      },
+      "pixel_delta": {
+        "changed_pixels": 47035,
+        "compressed_size": 163758,
+        "sha256": "9249d9f2901d0a2f3710de834a06b00191f9d5d288586bcf47a5ac019ca793fd"
+      },
+      "expected_output_size": 58044068,
+      "output_sha256": null,
+      "output_sha256_status": "PENDING_EXACT_REQUIRED_MOTHER_REPLAY",
+      "testpack": {
+        "name": "Kancolle_Kai_v0.02_M002_PortTop_RGBA32_V425R2_TESTPACK.zip",
+        "size": 681056,
+        "sha256": "c8fc59f37b0fa5166b700f0225a2fe935a3337c8010b66b9a9c1a6589b4e8d09",
+        "contains_complete_game_binary": false
+      },
+      "hardware_validation": "PENDING"
+    }
   ],
-  "historical_note": "Development RC/intermediate Mother hashes are intentionally excluded from public installation prerequisites. Public v0.01 always starts from clean 1.02. v0.02 M001 development is cumulative from v0.01 FINAL, while a future formal v0.02 release must be normalized back to clean 1.02 -> v0.02 FINAL deterministic patches."
+  "locked_components": [
+    {
+      "id": "tutorial-body-visibleblue-final",
+      "file": "sharedassets6.assets",
+      "output_sha256": "f67cbd9f3cc8752a32e7383c2d04578c466ae9f5913ca7bcc34570f5ac78a487",
+      "status": "VITA_PASS_FINAL"
+    },
+    {
+      "id": "tutorial-fairy-bubbles-final",
+      "file": "resources.assets",
+      "output_sha256": "f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8",
+      "status": "VITA_PASS_FINAL"
+    },
+    {
+      "id": "receiveship-next-final-l1u1",
+      "file": "sharedassets5.assets",
+      "path_id": 224,
+      "game_space_offset_px": {
+        "x": -1,
+        "y": -1
+      },
+      "output_sha256": "c43eed5af97a0f8b2feb826759fa5cbbca1641e47d65928f2fde91e554f1fa23",
+      "status": "VITA_PASS_FINAL"
+    },
+    {
+      "id": "v002-m001-strategy-info1-rgba32",
+      "file": "resources.assets",
+      "path_id": 4363,
+      "texture_name": "info1_set",
+      "texture_format": 4,
+      "dimensions": "1024x512",
+      "output_sha256": "fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e",
+      "status": "VITA_PASS_FINAL_LOCKED"
+    },
+    {
+      "id": "v002-m001-strategy-info2-rgba32",
+      "file": "resources.assets",
+      "path_id": 2180,
+      "texture_name": "info2_set",
+      "texture_format": 4,
+      "dimensions": "1024x512",
+      "output_sha256": "fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e",
+      "status": "VITA_PASS_FINAL_LOCKED"
+    },
+    {
+      "id": "v002-m001-tutorialguide1",
+      "file": "resources.assets",
+      "prefab_path_id": 29580,
+      "title_uilabel_path_id": 59638,
+      "body_uilabel_path_id": 58051,
+      "atlas_path_id": 1886,
+      "atlas_modified": false,
+      "output_sha256": "fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e",
+      "status": "VITA_PASS_FINAL_LOCKED"
+    },
+    {
+      "id": "v002-m001-simplified-jian-glyph",
+      "file": "sharedassets2.assets",
+      "unicode": "U+952E",
+      "character": "键",
+      "target_glyph": "cid15443",
+      "traditional_alias_used": false,
+      "output_sha256": "80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d",
+      "status": "VITA_PASS_FINAL_LOCKED"
+    }
+  ],
+  "historical_note": "Development RC/intermediate Mother hashes are intentionally excluded from public installation prerequisites. Public v0.01 always starts from clean 1.02. v0.02 development is cumulative from the latest Vita-accepted development state; a future formal v0.02 release must be normalized back to clean 1.02 -> v0.02 FINAL deterministic patches. M002 has not yet advanced development_current_files because its exact required sharedassets5 Mother replay and hardware validation are pending."
 }
