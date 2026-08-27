@@ -22,87 +22,98 @@ Required order:
 
 If steps 1–4 were skipped, or if overlay is generated only after the typography parameters are already fixed, the candidate is `INCOMPLETE`.
 
-**Outer changed-pixel bbox equality is not sufficient.** The rejected V4.1 title matched the Japanese outer subtitle bbox but its Chinese bright-core glyph height was still about 15.4% too small. See `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md`.
+**Outer changed-pixel bbox equality is not sufficient.** The rejected V4.1 title matched the Japanese outer subtitle rectangle but its Chinese bright-core glyph height was still about 15.4% too small. See `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md`.
 
 ## Shared subtitle anchor
 
-All four pages use the source subtitle `解説`. The Chinese subtitle is `说明`.
+All four pages use source subtitle `解説`; Chinese is `说明`.
 
-`说明` is a hard calibration anchor. The correct workflow is:
+Do not stretch `说明` to Japanese width.
 
-- use the original `解説` position / center as the page-specific anchor;
-- use the **M001 Vita-PASS Chinese `说明` typography proportions** as the canonical Chinese style;
-- match core height and vertical center through overlay;
+The exact M001 Vita-PASS `info1_set` was re-extracted and re-measured with one consistent bright-core criterion. Current canonical bright-core measurements are:
+
+- original info1 `戦略画面`: about `196×38`;
+- original info1 `解説`: about `68×27`;
+- accepted M001 `战略界面`: about `169×33`;
+- accepted M001 `说明`: about `57×23`.
+
+These values supersede earlier rough notes that mixed outline/core thresholds (`175×39`, `61×27`, etc.). Future sessions must preserve the measurement criterion when quoting sizes.
+
+Reverse-fit current implementation parameters for the M001 Chinese title style:
+
+- main title: SS8 size `~40.75`, stroke `~1.0`;
+- `说明`: SS8 size `~28.0`, stroke `~1.0`;
+- Noto Sans CJK SC, TTC index 2;
+- one Lanczos source mapping using the established Vita/source transform.
+
+For V5 info3–6 placement:
+
+- main title bright-core right edge + vertical center = original main title;
+- `说明` bright-core left edge + vertical center = original `解説`;
 - preserve natural Chinese width;
-- do **not** stretch `说明` to the Japanese width.
+- preserve exact original main→subtitle gap.
 
-Measured original source-space `解説` bboxes:
+Current gaps reproduced exactly:
 
-- info3: `x=594..662, y=41..67`
-- info4: `x=568..636, y=41..67`
-- info5: `x=618..686, y=41..67`
-- info6: `x=618..686, y=41..67`
+- info3 `11 px`;
+- info4 `12 px`;
+- info5 `13 px`;
+- info6 `13 px`.
 
-All four are `68×26` outer bright regions in the current measurement pass.
-
-Exact M001 Vita-PASS reference, re-extracted from the final package:
-
-- original info1 `解説`: about `68×27` source px;
-- accepted M001 Chinese `说明`: about `61×27` source px;
-- accepted Chinese height matched while width stayed naturally about `10.3%` narrower.
-
-The rejected V4.1 method that forcibly resized `说明` into `68×26` is permanently prohibited.
+V5 remains user-review pending.
 
 ## Paragraph font-size consistency
 
-A paragraph/source typography tier uses one shared font size. Never independently resize individual lines just because one translated line is longer or shorter.
-
-Current locks:
+The user approved the current body layout. During title/button convergence the body is frozen.
 
 - info3: paragraph 1 and paragraph 2 use the **same body font size**; all six lines share that size and a common left alignment.
-- info4: paragraph 1 uses one larger font size; paragraph 2 uses one smaller font size. Every line inside each paragraph must use its paragraph's single frozen size.
+- info4: paragraph 1 uses one larger font size; paragraph 2 uses one smaller font size. Every line inside each paragraph uses its paragraph's single frozen size.
 - info5: the entire body uses one font size and one common left alignment.
-- info6: both body blocks use one common body font size. Do not make the warning block a separate font size.
+- info6: both lower body blocks use one common body font size. Warning lines are not a separate size.
 
-If the source's two paragraphs are visually the same size, the Chinese version should also use the same size. Do not create artificial size differences from per-line bbox noise.
+Do not resize individual lines to compensate for translation length.
 
 ## info6 command-panel hierarchy
 
-Do not size all nine command labels independently.
+Exactly three semantic typography tiers:
 
-The source uses semantic typography tiers:
+1. primary cyan command term — one common large size:
+   `接近 / 脱离 / 航空 / 炮击 / 对潜攻击 / 突击 / 雷击 / 回避 / 统射`
+2. secondary cyan suffix — one common smaller size:
+   `攻击 / （接近＋炮击） / （统制射击）`
+3. white command explanation — one common explanation size.
 
-1. **Primary cyan command term — one common large size**
-   - `接近`
-   - `脱离`
-   - `航空`
-   - `炮击`
-   - `对潜攻击`
-   - `突击`
-   - `雷击`
-   - `回避`
-   - `统射`
+No per-button shrink-to-fit is allowed.
 
-2. **Secondary cyan suffix — one common smaller size**
-   - `攻击` in `航空攻击`
-   - `（接近＋炮击）` in `突击（接近＋炮击）`
-   - `（统制射击）` in `统射（统制射击）`
+Original bright-core targets used for convergence:
 
-3. **White command explanation — one common explanation size**
+- primary terms: typically `47–49×17–18` for two-character terms;
+- `航空`: about `49×18`;
+- `攻击`: `37×14`;
+- `突击`: about `49×18`;
+- `（接近＋炮击）`: about `108×15`;
+- `统射`: about `48×18`;
+- `（统制射击）`: about `91×14`;
+- white explanations: typically about `13 px` bright-core height.
 
-The primary term and suffix share a coherent baseline within each label. Long labels must not be solved by shrinking the entire command name independently.
+V5 role sizes solved before rendering:
 
-Measured original vs rejected V4 bright-core examples:
+- primary cyan `22.5`;
+- suffix cyan `17.75`;
+- white explanation `15.0`.
 
-- simple primary terms: original approximately `46–49×17–18`; rejected V4 approximately `42–43×17`;
-- `航空`: original `48×18`; rejected V4 about `43×17`;
-- `攻击`: original `37×14`; rejected V4 about `31×13`;
-- `突击`: original `48×18`; rejected V4 about `42×17`;
-- `（接近＋炮击）`: original `108×13`; rejected V4 about `94×13`;
-- `统射`: original `48×18`; rejected V4 about `44×17`;
-- `（统制射击）`: original `91×14`; rejected V4 about `77×13`.
+Representative V5 bright cores:
 
-The next render must solve the three common role sizes against the original overlay/core-bbox data before the Chinese panel is considered a layout candidate.
+- `接近` `46×18`;
+- `航空` `45×18`;
+- `攻击` `36×14`;
+- `突击` `45×18`;
+- `（接近＋炮击）` `107×14`;
+- `统射` `45×18`;
+- `（统制射击）` `88×14`;
+- sampled white explanations reproduce about `13 px` height.
+
+Translated widths remain natural and are not forced to Japanese explanation lengths.
 
 The explanation for `统射（统制射击）` is locked as:
 
@@ -112,31 +123,28 @@ The explanation for `统射（统制射击）` is locked as:
 
 Baked Chinese tutorial text must explicitly use a Simplified-Chinese localized font face.
 
-For current Noto CJK TTC resources:
-
 - TTC index `2` = Simplified Chinese (`Noto Sans CJK SC`) — required
 - TTC default/index `0` = Japanese (`Noto Sans CJK JP`) — prohibited
 
-The rejected JP-face candidate visibly produced a Japanese-localized form of `将` in info4/info5. Any such localized-glyph regression is QC FAIL.
+The rejected JP-face candidate visibly produced a Japanese-localized `将` in info4/info5.
 
 ## Current rendering path
 
-The accepted M001 visual approach remains the baseline:
-
-- clean background built from the approved reconstruction path;
-- layout driven by source raster measurements;
+- accepted clean background / refined donor reconstruction;
+- overlay + line spacing as the only layout solver;
 - explicit SC font face;
-- SS8 text-layer rasterization;
-- one Lanczos mapping/downsample into `1024×512` source space;
+- SS8 text layer;
+- one Lanczos source mapping;
 - natural Chinese width;
-- M001 white/cyan palette and outline logic;
-- RGBA32 visual path where final Texture2D conversion is adopted;
-- measured Vita source-to-screen transform for final QC.
+- M001 white/cyan/outline style;
+- RGBA32 visual path;
+- measured source-to-Vita transform for QC.
 
-Do not package an info3–6 Vita candidate until the user explicitly approves the overlay-driven visual candidate.
+Do not package until user explicitly approves the visual candidate.
 
-## Rejected versions
+## Rejected / current versions
 
-- V3/V3.1: overlay was still being used too much as a post-render report; title and command typography did not sufficiently follow the source.
-- V4: body layout substantially improved and the user approved the body, but title and info6 command typography remained wrong.
-- V4.1: **rejected title method**. It forcibly resized Chinese `说明` to the Japanese outer bbox. Outer bbox equality hid a `~15.4%` bright-core height deficit and incorrect proportions. Never reuse this exact-bbox anisotropic title method.
+- V3/V3.1: rejected; overlay still functioned too much as a post-render report.
+- V4: body substantially improved; body later approved, title and info6 command typography still wrong.
+- V4.1: title method rejected. It forcibly resized `说明` to Japanese rectangle and hid a ~15.4% core-height error.
+- **V5:** body frozen; only title and info6 command typography regenerated from measured bright-core targets. Status: `VISUAL CANDIDATE / USER REVIEW PENDING`.
