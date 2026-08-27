@@ -2,6 +2,8 @@
 
 Status: persistent project rule for the current `info3_set`–`info6_set` tutorial component.
 
+**Critical dependency:** read `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md` before any new render. That file is non-negotiable and supersedes any weaker interpretation of “overlay QC”.
+
 This file exists because earlier candidates incorrectly treated overlay/line-spacing comparison as a post-render illustration instead of using the original raster measurements to drive the Chinese layout. That workflow is rejected.
 
 ## Overlay must be an input, not a post-hoc screenshot
@@ -11,19 +13,28 @@ For these pages, do **not** render a Chinese layout from guessed coordinates and
 Required order:
 
 1. Measure the original Japanese raster first.
-2. Extract actual visible text bboxes / line bands / line centers from original-vs-clean-plate pixel evidence.
+2. Extract actual visible text bboxes / **bright-core glyph bboxes** / line bands / line centers from original-vs-clean-plate pixel evidence.
 3. Identify paragraph-level typography tiers and anchors from those measurements.
 4. Freeze one font size per source typography tier.
 5. Render the Chinese text using those measured centers/anchors.
-6. Use 50% overlay and line guides to verify the already measurement-driven layout.
+6. Overlay original and candidate and inspect core-glyph scale, line spacing, anchor and stroke weight.
+7. Iterate the layout parameters from the overlay until they converge.
 
-If steps 1–4 were skipped, the candidate is `INCOMPLETE` even if an overlay image was later generated.
+If steps 1–4 were skipped, or if overlay is generated only after the typography parameters are already fixed, the candidate is `INCOMPLETE`.
+
+**Outer changed-pixel bbox equality is not sufficient.** The rejected V4.1 title matched the Japanese outer subtitle bbox but its Chinese bright-core glyph height was still about 15.4% too small. See `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md`.
 
 ## Shared subtitle anchor
 
 All four pages use the source subtitle `解説`. The Chinese subtitle is `说明`.
 
-`说明` is a hard calibration anchor and must match the original `解説` visible bbox/center/height on each page before the main title is accepted.
+`说明` is a hard calibration anchor. The correct workflow is:
+
+- use the original `解説` position / center as the page-specific anchor;
+- use the **M001 Vita-PASS Chinese `说明` typography proportions** as the canonical Chinese style;
+- match core height and vertical center through overlay;
+- preserve natural Chinese width;
+- do **not** stretch `说明` to the Japanese width.
 
 Measured original source-space `解説` bboxes:
 
@@ -32,7 +43,15 @@ Measured original source-space `解説` bboxes:
 - info5: `x=618..686, y=41..67`
 - info6: `x=618..686, y=41..67`
 
-All four are `68×26` visible pixels. The main translated title may have a naturally different width, but it must be positioned relative to this hard subtitle anchor rather than by re-centering the whole translated title group by eye.
+All four are `68×26` outer bright regions in the current measurement pass.
+
+Exact M001 Vita-PASS reference, re-extracted from the final package:
+
+- original info1 `解説`: about `68×27` source px;
+- accepted M001 Chinese `说明`: about `61×27` source px;
+- accepted Chinese height matched while width stayed naturally about `10.3%` narrower.
+
+The rejected V4.1 method that forcibly resized `说明` into `68×26` is permanently prohibited.
 
 ## Paragraph font-size consistency
 
@@ -73,6 +92,18 @@ The source uses semantic typography tiers:
 
 The primary term and suffix share a coherent baseline within each label. Long labels must not be solved by shrinking the entire command name independently.
 
+Measured original vs rejected V4 bright-core examples:
+
+- simple primary terms: original approximately `46–49×17–18`; rejected V4 approximately `42–43×17`;
+- `航空`: original `48×18`; rejected V4 about `43×17`;
+- `攻击`: original `37×14`; rejected V4 about `31×13`;
+- `突击`: original `48×18`; rejected V4 about `42×17`;
+- `（接近＋炮击）`: original `108×13`; rejected V4 about `94×13`;
+- `统射`: original `48×18`; rejected V4 about `44×17`;
+- `（统制射击）`: original `91×14`; rejected V4 about `77×13`.
+
+The next render must solve the three common role sizes against the original overlay/core-bbox data before the Chinese panel is considered a layout candidate.
+
 The explanation for `统射（统制射击）` is locked as:
 
 `实施电探统制射击。`
@@ -103,3 +134,9 @@ The accepted M001 visual approach remains the baseline:
 - measured Vita source-to-screen transform for final QC.
 
 Do not package an info3–6 Vita candidate until the user explicitly approves the overlay-driven visual candidate.
+
+## Rejected versions
+
+- V3/V3.1: overlay was still being used too much as a post-render report; title and command typography did not sufficiently follow the source.
+- V4: body layout substantially improved and the user approved the body, but title and info6 command typography remained wrong.
+- V4.1: **rejected title method**. It forcibly resized Chinese `说明` to the Japanese outer bbox. Outer bbox equality hid a `~15.4%` bright-core height deficit and incorrect proportions. Never reuse this exact-bbox anisotropic title method.
