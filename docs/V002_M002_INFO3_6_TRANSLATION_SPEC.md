@@ -1,6 +1,8 @@
 # v0.02 M002 — info3–6 Translation / Highlight Specification
 
-Status: translation copy locked; visual rendering candidate in progress. This document records the approved Chinese wording and semantic blue-highlight mapping so later sessions must not independently retranslate or restyle it.
+Status: **translation copy locked; previous SS8 RGBA32 V2 visual layout rejected/incomplete pending strict original-pixel typography measurement.**
+
+This document records the approved Chinese wording and semantic blue-highlight mapping so later sessions must not independently retranslate or restyle it.
 
 ## Persistent translation rules
 
@@ -9,13 +11,29 @@ Status: translation copy locked; visual rendering candidate in progress. This do
 - Missing, extra, or semantically incorrect blue highlighting is QC FAIL.
 - Chinese line width is not required to match Japanese line width. Match font height, baseline/vertical center, line spacing, hierarchy, alignment, safe area, and final game-space aspect ratio.
 - Special key notation keeps no literal spaces outside the brackets; breathing room goes inside: `按【 L 】键`, `按【 R 】键`.
+- Baked Simplified-Chinese tutorial text must explicitly select the Simplified-Chinese localized font face. For the current Noto CJK TTC files, index `2` is SC; default/index `0` is JP and is prohibited for Chinese baked text.
+
+## Mandatory layout-measurement rule for this component
+
+Before rendering a candidate, measure the original Japanese raster itself. Do not begin from visually guessed Y coordinates.
+
+For every title, body paragraph, and info6 command panel:
+
+1. derive the original visible glyph band from original-vs-clean-plate pixel evidence;
+2. record top/bottom, visible height, line center, and adjacent line-center spacing;
+3. measure each typography tier independently;
+4. render Chinese with a shared baseline/line model;
+5. compare original vs Chinese in measured Vita screen geometry using strict overlay and line guides;
+6. reject any candidate rendered before this evidence exists.
+
+A broad 50% page overlay by itself is not sufficient. The source-line measurements must drive the layout.
 
 ## info3 — 旗舰提督室 说明
 
 ### Paragraph 1
 
 1. `这里就是旗舰提督室，相当于《舰队Collection 改》的母港界面。`
-2. `在这里可进行舰队编成，在工厂建造舰娘、开发装备，`
+2. `在这里可进行舰队的编成，在工厂可进行舰娘的建造和装备的开发`
 3. `也可通过补给、入渠和改装来强化舰娘。`
 
 Blue semantic keywords:
@@ -81,6 +99,8 @@ The right-side Japanese ship-category list is intentionally preserved exactly as
 Blue semantic keyword:
 - `战斗指挥指令`
 
+The glyph `将` must render with a Simplified-Chinese localized form; a Japanese localized glyph shape is QC FAIL.
+
 ## info6 — 战斗指挥输入 说明
 
 ### Nine command panels
@@ -99,7 +119,7 @@ Command name and explanation use different original font sizes. Preserve the hie
 | `回避` | `实施回避机动。` |
 | `统射（统制射击）` | `实施电探统制射击。` |
 
-Do not change the final explanation to `电探控制射击`; the locked wording is `实施电探统制射击。`
+Do not change the final explanation to `电探控制射击`; the locked wording is `实施电探统制射击。`.
 
 ### Body paragraph 1
 
@@ -128,14 +148,17 @@ The parenthetical explanations `（鱼雷攻击）` and `（爆雷）` remain wh
 
 ## Rendering direction
 
-Render info3–6 using the same accepted visual approach as M001 info1/info2 wherever compatible:
+Render info3–6 using the accepted M001 info1/info2 visual path wherever compatible, but only after exact original typography measurements are recorded:
 
 - measured source-to-Vita non-uniform transform;
+- explicit Simplified-Chinese localized font face;
 - natural Chinese width;
 - SS8 text-layer rasterization;
 - one Lanczos mapping/downsample into 1024×512 source-space;
 - RGBA32 visual path instead of BC3 where the final Texture2D conversion is adopted;
 - same white/cyan palette and outline logic as M001;
-- strict original-vs-Chinese typography QC, including title hierarchy, font height, vertical centers/baselines, line spacing, safe area, and explicit blue-highlight map.
+- strict original-vs-Chinese typography QC driven by actual source-pixel line bands, including title hierarchy, font height, vertical centers/baselines, line-center spacing, safe area, and explicit blue-highlight map.
 
-Current render work is visual-candidate only until exact asset writeback and PSV Vita hardware validation are completed.
+The previous V2 render is not an accepted layout baseline because it used manually approximated line bands and the default Japanese TTC face. It must not be packaged or reused as-is.
+
+Current render work remains visual-candidate only until exact asset writeback and PSV Vita hardware validation are completed.
