@@ -50,6 +50,18 @@ Confirmed current examples:
 
 Do not squeeze or stretch Chinese merely to match the Japanese line width. Match height, baseline, line spacing, hierarchy, alignment, and safe area; allow Chinese line length to differ naturally.
 
+## Simplified-Chinese localized glyph rule
+
+For baked Chinese tutorial/UI text rendered from a CJK TTC/OTC collection, the Simplified-Chinese face must be selected explicitly. Do not rely on the collection's default face.
+
+For the Noto CJK fonts currently used in offline tutorial-text rendering:
+
+- `NotoSansCJK-Regular.ttc`: face/index `2` = `Noto Sans CJK SC`
+- `NotoSansCJK-Bold.ttc`: face/index `2` = `Noto Sans CJK SC`
+- face/index `0` is the Japanese localized face and must not be used for Simplified-Chinese baked text.
+
+This rule exists because default-face rendering produced Japanese localized glyph shapes such as `将` in an M002 visual candidate. A translated page containing a Japanese localized glyph form is QC FAIL even if the Unicode character itself is correct.
+
 ## Special-symbol spacing
 
 For textual full-width button brackets, keep Chinese text adjacent to the outer brackets and place optional visual spacing inside them.
@@ -60,24 +72,28 @@ Avoid: `按 【R】 键` and `按 【 R 】 键`.
 
 When a native UI sprite represents the button, use the sprite as a real UI element rather than replacing it with textual brackets.
 
-## Current info3–6 translation/layout notes
+## Current info3–6 locked translation/layout notes
 
 - `info4` right-side ship-category list remains untranslated and must be preserved exactly unless the user explicitly reopens it.
-- `info3` final second-paragraph last line: `请通过记录进行战况的保存。`
-- `info4` first section second line: `在每支舰队中，最多可编入6名舰娘`
-- `info4` second paragraph must fit the source paragraph count/typographic block and currently uses:
+- `info3` paragraph 1 line 2 is locked as: `在这里可进行舰队的编成，在工厂可进行舰娘的建造和装备的开发`
+  - blue semantic segments: `编成`, `工厂`, `建造`, `开发`
+- `info3` paragraph 2 final line: `请通过记录进行战况的保存。`
+  - `记录` is blue; do not add quotation marks.
+- `info4` first section second line is locked as: `在每支舰队中，可编入最多六支舰娘。`
+  - only `最多六支` is the corresponding blue semantic span, mirroring source `最大六隻`.
+- `info4` second paragraph must remain four lines:
   - `根据舰队编成，出击时的航线有时会发生较大变化。`
   - `若无法顺利攻略作战海域，除了提升舰队练度、`
   - `完善装备外，调整舰队编成也是一种有效的方法。`
   - `尤其是驱逐舰为主力的水雷战队，由1艘轻巡洋舰担任旗舰会更有效。`
-- `info5` reviewed translation is accepted as currently drafted.
+- `info5` reviewed translation is locked as drafted.
 - `info6` command-name and explanation text use different font sizes.
-- `info6` `電探統制射撃` / command explanation is translated using `统制射击` terminology, not `电探控制射击`.
-- `info6` lower explanatory/warning block should remain one continuous typographic block, matching the source grouping:
+- `info6` `統射（統制射撃）` explanation is locked as `实施电探统制射击。`; do not change it to `电探控制射击` and do not drop `电探`.
+- `info6` lower explanatory/warning block remains one continuous five-line typographic block:
   - `驱逐舰等舰船的基本雷击（鱼雷攻击），在最终阶段十分有效。`
   - `对潜水舰则推荐使用对潜（爆雷）攻击。舰队中编有航空母舰时，`
   - `也可选择航空攻击。如果只输入接近、回避、脱离等非攻击类指令，`
   - `舰队将完全不会发动攻击，请务必注意。`
   - `根据舰队编成、配置顺序和指挥输入，战斗内容也会发生变化。`
 
-These notes are a living localization reference and should be consulted before rendering or packaging later info3–6 candidates.
+These notes are a living localization reference and must be consulted before rendering or packaging later info3–6 candidates.
