@@ -1,150 +1,219 @@
-# v0.02 M002 — info3–6 Overlay-Driven Layout Locks
+# v0.02 info3–6 Overlay-Driven Layout Locks
 
-Status: persistent project rule for the current `info3_set`–`info6_set` tutorial component.
+> Historical note: this work was developed in one chat under the working label `M002 info3–6`, while another parallel chat already used the project-level M002/M003 numbering for other components. Do **not** use this filename as the global component-order source. The canonical cross-track ID is `strategy-tutorial-info3-6-rgba32`.
 
-**Critical dependency:** read `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md` before any new render. That file is non-negotiable and supersedes any weaker interpretation of “overlay QC”.
+Status: **V6 FINAL / PSV VITA HARDWARE PASS / ACCEPTED / LOCKED** as of 2026-08-28.
 
-This file exists because earlier candidates incorrectly treated overlay/line-spacing comparison as a post-render illustration instead of using the original raster measurements to drive the Chinese layout. That workflow is rejected.
+Exact Vita-tested package:
 
-## Overlay must be an input, not a post-hoc screenshot
+`Kancolle_Kai_v0.02_M002_Info3_6_RGBA32_VITA_CANDIDATE.zip`
 
-For these pages, do **not** render a Chinese layout from guessed coordinates and then merely show a 50% overlay afterward.
+ZIP SHA-256:
 
-Required order:
+`87b3d0838ec6b1050e51b5914014edb824ef694c325b12107abeb89542cca2c8`
+
+Exact cumulative `resources.assets` Mother used for that package:
+
+`cb8cdd0e872aa22ab603e5b2be2bba78219cd8d54450f96bc9107bbdc5b1d50a`
+
+Mother size: `1,283,402,344` bytes.
+
+Exact Vita-tested output:
+
+`20e0a0232c96eeba213fe09f65e3f1742302e50eec6fcb777e4952ad07c79311`
+
+Output size: `1,290,218,052` bytes.
+
+This Mother already contained work from another chat. The structured rebuild preserved every non-target serialized object byte-for-byte; therefore the info3–6 writeback must never be reconstructed from an older M001-only Mother when continuing from that parallel cumulative state.
+
+**Critical dependency:** read `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md` and `docs/TUTORIAL_TEXTURE_RENDERING_SOP.md` before any future baked tutorial render.
+
+## Overlay + line spacing is the layout solver
+
+For these pages, overlay is not a post-render illustration. The only accepted workflow is:
 
 1. Measure the original Japanese raster first.
-2. Extract actual visible text bboxes / **bright-core glyph bboxes** / line bands / line centers from original-vs-clean-plate pixel evidence.
-3. Identify paragraph-level typography tiers and anchors from those measurements.
-4. Freeze one font size per source typography tier.
-5. Render the Chinese text using those measured centers/anchors.
-6. Overlay original and candidate and inspect core-glyph scale, line spacing, anchor and stroke weight.
-7. Iterate the layout parameters from the overlay until they converge.
+2. Extract actual visible line bands and **bright-core glyph bboxes** from original-vs-clean-plate evidence.
+3. Measure line centers, adjacent line-center spacing, typography tiers and anchors.
+4. Freeze one font size per semantic/source typography tier.
+5. Render Chinese using those measured constraints.
+6. Overlay original and Chinese and use the difference to adjust parameters.
+7. Iterate until the measured geometry converges.
+8. Only then generate a user-facing QC image.
 
-If steps 1–4 were skipped, or if overlay is generated only after the typography parameters are already fixed, the candidate is `INCOMPLETE`.
+If the typography was guessed first and overlay was generated afterward, the candidate is `INCOMPLETE`.
 
-**Outer changed-pixel bbox equality is not sufficient.** The rejected V4.1 title matched the Japanese outer subtitle rectangle but its Chinese bright-core glyph height was still about 15.4% too small. See `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md`.
+**Outer changed-pixel bbox equality is not a font-size measurement.** The rejected V4.1 title matched an outer rectangle while the Chinese bright core was ~15.4% too short. Bright-core geometry, line center and line spacing are the relevant controls.
 
-## Shared subtitle anchor
+## Font-face lock
 
-All four pages use source subtitle `解説`; Chinese is `说明`.
+Baked Simplified-Chinese tutorial text must explicitly use:
 
-Do not stretch `说明` to Japanese width.
+- `Noto Sans CJK SC`
+- TTC face index `2`
 
-The exact M001 Vita-PASS `info1_set` was re-extracted and re-measured with one consistent bright-core criterion. Current canonical bright-core measurements are:
+TTC default/index `0` is `Noto Sans CJK JP` and is prohibited. It previously produced visibly Japanese-localized glyph forms such as `将`.
 
-- original info1 `戦略画面`: about `196×38`;
-- original info1 `解説`: about `68×27`;
-- accepted M001 `战略界面`: about `169×33`;
-- accepted M001 `说明`: about `57×23`.
+## Final title solver — V6
 
-These values supersede earlier rough notes that mixed outline/core thresholds (`175×39`, `61×27`, etc.). Future sessions must preserve the measurement criterion when quoting sizes.
+The V6 title is not stretched to Japanese width.
 
-Reverse-fit current implementation parameters for the M001 Chinese title style:
+Shared render parameters:
 
-- main title: SS8 size `~40.75`, stroke `~1.0`;
-- `说明`: SS8 size `~28.0`, stroke `~1.0`;
-- Noto Sans CJK SC, TTC index 2;
-- one Lanczos source mapping using the established Vita/source transform.
+- main title: SS8 nominal size `45.5`, stroke `2.0`
+- subtitle `说明`: SS8 nominal size `32.5`, stroke `2.0`
+- font: Noto Sans CJK SC, TTC index 2
+- one SS8 -> source-space Lanczos mapping
+- natural Chinese width
 
-For V5 info3–6 placement:
+Original bright-core target bboxes in source texture coordinates:
 
-- main title bright-core right edge + vertical center = original main title;
-- `说明` bright-core left edge + vertical center = original `解説`;
-- preserve natural Chinese width;
-- preserve exact original main→subtitle gap.
+| Page | Main title target | `解説` target |
+| --- | --- | --- |
+| info3 | `(335,31)-(583,69)` | `(594,41)-(662,67)` |
+| info4 | `(359,31)-(556,69)` | `(568,41)-(636,67)` |
+| info5 | `(308,31)-(605,69)` | `(618,41)-(686,67)` |
+| info6 | `(308,31)-(605,69)` | `(618,41)-(686,67)` |
 
-Current gaps reproduced exactly:
+Final constraints:
 
-- info3 `11 px`;
-- info4 `12 px`;
-- info5 `13 px`;
-- info6 `13 px`.
+- main-title bright-core top/bottom = original top/bottom (`38 px` high)
+- main-title bright-core right edge = original main-title right edge
+- `说明` bright-core top/bottom = original `解説` top/bottom (`26 px` high)
+- `说明` bright-core left edge = original `解説` left edge
+- main-title center Y = `50.0`
+- subtitle center Y = `54.0`
+- subtitle-minus-main center offset = `+4.0 px`
+- widths remain natural Chinese widths
 
-V5 remains user-review pending.
+Original and V6 horizontal gaps are identical:
 
-## Paragraph font-size consistency
+- info3: `11 px`
+- info4: `12 px`
+- info5: `13 px`
+- info6: `13 px`
 
-The user approved the current body layout. During title/button convergence the body is frozen.
+This V6 title geometry is Vita-accepted. Do not regress to V4.1's anisotropic exact-width-box method or V5's incomplete height model.
 
-- info3: paragraph 1 and paragraph 2 use the **same body font size**; all six lines share that size and a common left alignment.
-- info4: paragraph 1 uses one larger font size; paragraph 2 uses one smaller font size. Every line inside each paragraph uses its paragraph's single frozen size.
-- info5: the entire body uses one font size and one common left alignment.
-- info6: both lower body blocks use one common body font size. Warning lines are not a separate size.
+## Final body typography — frozen
 
-Do not resize individual lines to compensate for translation length.
+The body was user-approved before the V6 title/button correction and was kept byte-for-byte frozen while V6 was generated.
 
-## info6 command-panel hierarchy
+Approximate nominal render sizes from the accepted body solver:
 
-Exactly three semantic typography tiers:
+- info3 body, both paragraphs: `24.3125`, stroke `1.1`
+- info4 paragraph 1: `22.0625`, stroke `1.1`
+- info4 paragraph 2: `20.6875`, stroke `1.0`
+- info5 body: `24.5625`, stroke `1.1`
+- info6 lower body, both blocks: `22.9375`, stroke `1.0`
 
-1. primary cyan command term — one common large size:
-   `接近 / 脱离 / 航空 / 炮击 / 对潜攻击 / 突击 / 雷击 / 回避 / 统射`
-2. secondary cyan suffix — one common smaller size:
-   `攻击 / （接近＋炮击） / （统制射击）`
-3. white command explanation — one common explanation size.
+These values are implementation records, not permission to skip measurement. If the raster is rebuilt, the original line bands/centers remain the authoritative geometry.
 
-No per-button shrink-to-fit is allowed.
+Paragraph rules:
 
-Original bright-core targets used for convergence:
+- info3: paragraph 1 and paragraph 2 use the same size; all six lines share one left edge.
+- info4: paragraph 1 has one larger size; paragraph 2 has one smaller size; every line inside each paragraph shares its paragraph size.
+- info5: all body lines use one size and one left edge.
+- info6: both lower body blocks, including the warning, use one common body size.
+- never shrink individual lines to fit translated width.
 
-- primary terms: typically `47–49×17–18` for two-character terms;
-- `航空`: about `49×18`;
-- `攻击`: `37×14`;
-- `突击`: about `49×18`;
-- `（接近＋炮击）`: about `108×15`;
-- `统射`: about `48×18`;
-- `（统制射击）`: about `91×14`;
-- white explanations: typically about `13 px` bright-core height.
+## info6 final three-tier command typography
 
-V5 role sizes solved before rendering:
+There are exactly three typography tiers.
 
-- primary cyan `22.5`;
-- suffix cyan `17.75`;
-- white explanation `15.0`.
+### Primary cyan — shared large size
 
-Representative V5 bright cores:
+`22.5`, stroke `1.0`
 
-- `接近` `46×18`;
-- `航空` `45×18`;
-- `攻击` `36×14`;
-- `突击` `45×18`;
-- `（接近＋炮击）` `107×14`;
-- `统射` `45×18`;
-- `（统制射击）` `88×14`;
-- sampled white explanations reproduce about `13 px` height.
+Primary terms:
 
-Translated widths remain natural and are not forced to Japanese explanation lengths.
+- `接近`
+- `脱离`
+- `航空`
+- `炮击`
+- `对潜`
+- `突击`
+- `雷击`
+- `回避`
+- `统射`
 
-The explanation for `统射（统制射击）` is locked as:
+### Secondary cyan suffix — shared smaller size
+
+`17.75`, stroke `1.0`
+
+Suffixes:
+
+- `攻击` after `航空`
+- `攻击` after `对潜`
+- `（接近＋炮击）`
+- `（统制射击）`
+
+The final V6 correction specifically changed `对潜攻击` from an all-large V5 label to **large `对潜` + small `攻击`**. The other eight command panels were frozen byte-identical to the already-approved V5 state during that correction.
+
+### White explanation — shared size
+
+`15.0`, stroke approximately `0.75`
+
+All nine white explanations use this tier.
+
+Locked final explanation for `统射（统制射击）`:
 
 `实施电探统制射击。`
 
-## Simplified-Chinese font-face lock
+Do not regress to `电探控制射击`.
 
-Baked Chinese tutorial text must explicitly use a Simplified-Chinese localized font face.
+## Final render/writeback path
 
-- TTC index `2` = Simplified Chinese (`Noto Sans CJK SC`) — required
-- TTC default/index `0` = Japanese (`Noto Sans CJK JP`) — prohibited
+- accepted/refined clean background
+- overlay + line spacing used as the only layout solver
+- explicit SC font face
+- SS8 text layer
+- one Lanczos mapping into source texture space
+- natural Chinese width
+- semantic white/cyan mapping
+- final Texture2D stored as RGBA32 rather than BC3
+- measured source-to-Vita transform for QC
 
-The rejected JP-face candidate visibly produced a Japanese-localized `将` in info4/info5.
+## Asset targets
 
-## Current rendering path
+All four are in `resources.assets`:
 
-- accepted clean background / refined donor reconstruction;
-- overlay + line spacing as the only layout solver;
-- explicit SC font face;
-- SS8 text layer;
-- one Lanczos source mapping;
-- natural Chinese width;
-- M001 white/cyan/outline style;
-- RGBA32 visual path;
-- measured source-to-Vita transform for QC.
+| Page | PathID | Original | Final |
+| --- | ---: | --- | --- |
+| `info3_set` | 1420 | DXT5, 1 mip | RGBA32, 1 mip |
+| `info4_set` | 5059 | DXT5, 1 mip | RGBA32, 1 mip |
+| `info5_set` | 3028 | DXT5, 11 mips | RGBA32, 11 mips |
+| `info6_set` | 4413 | DXT5, 1 mip | RGBA32, 1 mip |
 
-Do not package until user explicitly approves the visual candidate.
+`info4` right-side Japanese ship-category list is intentionally preserved exactly and is not translated or cleaned.
 
-## Rejected / current versions
+For `info5`, all 11 mip levels are retained. Each mip is generated directly from the final mip0 using Lanczos and is vertically flipped independently for Unity raw RGBA storage. This was validated against existing game RGBA32 mipmapped textures; tested stored mips matched direct-Lanczos reconstruction at roughly `0.05–0.18` MAE/channel.
 
-- V3/V3.1: rejected; overlay still functioned too much as a post-render report.
-- V4: body substantially improved; body later approved, title and info6 command typography still wrong.
-- V4.1: title method rejected. It forcibly resized `说明` to Japanese rectangle and hid a ~15.4% core-height error.
-- **V5:** body frozen; only title and info6 command typography regenerated from measured bright-core targets. Status: `VISUAL CANDIDATE / USER REVIEW PENDING`.
+## Final structural QC
+
+Unity: `5.2.2p3`
+
+SerializedFile version: `15`
+
+Object count: `65,462`
+
+Current Mother dataOffset: `1,854,080`
+
+Final offline reconstruction before hardware test had:
+
+- non-target serialized object mismatch count: `0`
+- inter-object gap mismatch count: `0`
+- unexpected metadata diff count: `0`
+- all four reconstructed mip0 rasters exact to the approved V6 RGBA source PNGs
+- M001 Vita-PASS resources objects byte-identical to their accepted payloads
+
+The exact resulting file subsequently passed PSV Vita hardware testing, so V6 is now `VITA PASS / FINAL / LOCKED`.
+
+## Version history
+
+- V2: rejected; manually approximated bands and default JP TTC face.
+- V3/V3.1: rejected; overlay still operated too much as a report rather than the sole solver.
+- V4: body substantially improved and later accepted; title/info6 hierarchy still wrong.
+- V4.1: title method permanently rejected; outer-box matching hid ~15.4% bright-core height error.
+- V5: info6 eight command panels largely accepted; title still incomplete; `对潜攻击` hierarchy still wrong.
+- **V6: FINAL. Title overlay+line-spacing geometry converged, `对潜` + small `攻击` corrected, PSV Vita PASS.**
