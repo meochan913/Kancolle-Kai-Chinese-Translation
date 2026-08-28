@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "component_id": "strategy-tutorial-info1-6-rgba32",
+  "project_version": "v0.02-development",
+  "formal_release": false,
+  "status": "PSV_VITA_HARDWARE_PASS_ACCEPTED_LOCKED",
+  "hardware_validation_dates": {
+    "info1_info2_tutorialguide1": "2026-08-24",
+    "info3_info6": "2026-08-28"
+  },
+  "numbering_note": "info3-info6 was developed under a local working label M002, but project-level M002/M003 are also used by a parallel chat. This manifest intentionally uses a non-numeric canonical component ID and does not supersede parallel M003 work.",
+  "m001": {
+    "package": "Kancolle_Kai_v0.02_M001_RGBA32_VITA_CANDIDATE.zip",
+    "package_sha256": "2e0f1a312dbf4f0618ac2860aa4ee72943045c79253ae69912e0bd8cdcf22eb8",
+    "resources_mother_sha256": "f19fbcf5f2be01bd386ff4f126688ab7685f3df3426881924797863348f7fce8",
+    "resources_output_sha256": "fe3c836c9f3a4ad98a2a34e4bd7c2319ca7e1a9d6e3eb9c8d99f1245d3903c7e",
+    "sharedassets2_mother_sha256": "7cde6cf01ae29fa4a31d72c1d2865016e30ddf4809d7d699cb3b7d415568ee61",
+    "sharedassets2_output_sha256": "80121aad85c0790472c474f2988f5ea5b41a2868eade45fabdfa5a9c6014b34d",
+    "targets": [
+      {"file":"resources.assets","path_id":4363,"name":"info1_set","format":"RGBA32","mips":1},
+      {"file":"resources.assets","path_id":2180,"name":"info2_set","format":"RGBA32","mips":1},
+      {"file":"resources.assets","path_id":29580,"name":"TutorialGuide1 prefab root"},
+      {"file":"resources.assets","path_id":59638,"name":"TutorialGuide1 title UILabel"},
+      {"file":"resources.assets","path_id":58051,"name":"TutorialGuide1 body UILabel"},
+      {"file":"sharedassets2.assets","unicode":"U+952E","character":"键","target_glyph":"cid15443"}
+    ]
+  },
+  "info3_info6_final": {
+    "historical_package_name": "Kancolle_Kai_v0.02_M002_Info3_6_RGBA32_VITA_CANDIDATE.zip",
+    "package_sha256": "87b3d0838ec6b1050e51b5914014edb824ef694c325b12107abeb89542cca2c8",
+    "resources_mother_sha256": "cb8cdd0e872aa22ab603e5b2be2bba78219cd8d54450f96bc9107bbdc5b1d50a",
+    "resources_mother_size": 1283402344,
+    "resources_output_sha256": "20e0a0232c96eeba213fe09f65e3f1742302e50eec6fcb777e4952ad07c79311",
+    "resources_output_size": 1290218052,
+    "unity_version": "5.2.2p3",
+    "serialized_file_version": 15,
+    "object_count": 65462,
+    "data_offset": 1854080,
+    "targets": [
+      {
+        "path_id": 1420,
+        "name": "info3_set",
+        "old_format": 12,
+        "new_format": 4,
+        "old_object_size": 524364,
+        "new_object_size": 2097228,
+        "mips": 1,
+        "source_png_sha256": "12e2ad80d6c0f0a10cccff1644ac75d4fd572d96167f29f750d2c61a34297c34",
+        "object_payload_sha256": "7326e8ffd1529beb3c3abb82ffa1205c427af3ddbf9e853bab2a1e9be16952fc"
+      },
+      {
+        "path_id": 5059,
+        "name": "info4_set",
+        "old_format": 12,
+        "new_format": 4,
+        "old_object_size": 524364,
+        "new_object_size": 2097228,
+        "mips": 1,
+        "source_png_sha256": "4a693c7b8c90d8152415e08e0e5c08721fd80f2cf1a30663da98ef8438d2042e",
+        "object_payload_sha256": "d81ee68a7515204cf7d8f2b54ec7a8605badbd2755d7bda2c63f2c3fe9187ae1",
+        "ship_type_list": "PRESERVED_ORIGINAL_JAPANESE"
+      },
+      {
+        "path_id": 3028,
+        "name": "info5_set",
+        "old_format": 12,
+        "new_format": 4,
+        "old_object_size": 699164,
+        "new_object_size": 2796280,
+        "old_image_bytes": 699088,
+        "new_image_bytes": 2796204,
+        "mips": 11,
+        "mip_generation": "each level generated directly from final mip0 with Lanczos; each level vertically flipped independently for Unity raw RGBA storage",
+        "source_png_sha256": "59c10cc5a5bca2307f946ef1925e88ade3cc658a9fa2b02cba250cea899d3ad7",
+        "object_payload_sha256": "895fa0aee66405f7e9b034a063d857de59b77b72f471532ceab34f394ae793ac"
+      },
+      {
+        "path_id": 4413,
+        "name": "info6_set",
+        "old_format": 12,
+        "new_format": 4,
+        "old_object_size": 524364,
+        "new_object_size": 2097228,
+        "mips": 1,
+        "source_png_sha256": "3b6e69019d897dd3ba7765803ac8143f7e431e2eb2374795082ee73917397274",
+        "object_payload_sha256": "0f7238c9424adb1dd1984fcb14580d2d9ee396416509a9dda84262986404a6e1"
+      }
+    ],
+    "offline_qc": {
+      "non_target_object_mismatch_count": 0,
+      "gap_mismatch_count": 0,
+      "unexpected_metadata_diff_count": 0,
+      "top_mip_exact_to_approved_rgba": true,
+      "m001_resources_objects_byte_identical": true
+    },
+    "hardware_validation": "PASS"
+  },
+  "parallel_m003_preservation": {
+    "document": "docs/M003_R4_HANDOFF_ADDENDUM.md",
+    "document_blob_sha256_at_record_time": "2d797cb0ca7de7d51ed589afb0eb0f1a9fc0b20b",
+    "rule": "Do not infer M003 hardware PASS from the info1-6 hardware test. Do not overwrite or renumber parallel M003 work. Future merges must start from the latest exact cumulative Mother and preserve non-target serialized objects byte-for-byte."
+  },
+  "canonical_docs": [
+    "docs/INFO1_6_TUTORIAL_RGBA32_HANDOFF.md",
+    "docs/TUTORIAL_TEXTURE_RENDERING_SOP.md",
+    "docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md",
+    "docs/V002_M002_INFO3_6_TRANSLATION_SPEC.md",
+    "docs/M002_INFO3_6_OVERLAY_LAYOUT_LOCKS.md"
+  ]
+}
