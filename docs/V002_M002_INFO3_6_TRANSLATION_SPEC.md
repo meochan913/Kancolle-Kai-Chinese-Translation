@@ -1,32 +1,27 @@
-# v0.02 M002 — info3–6 Translation / Highlight Specification
+# v0.02 info3–6 Translation / Highlight Specification
 
-Status: **translation copy locked; previous SS8 RGBA32 V2 visual layout rejected/incomplete pending strict original-pixel typography measurement.**
+> Historical note: this document was created under the working label `M002 info3–6`. Project-level M002/M003 numbering is also used by another parallel chat. Treat this as the canonical translation spec for `strategy-tutorial-info3-6-rgba32`, not as the global component-order source.
 
-This document records the approved Chinese wording and semantic blue-highlight mapping so later sessions must not independently retranslate or restyle it.
+Status: **TRANSLATION LOCKED / V6 PSV VITA HARDWARE PASS / FINAL / LOCKED** as of 2026-08-28.
+
+Exact Vita-tested package:
+
+`Kancolle_Kai_v0.02_M002_Info3_6_RGBA32_VITA_CANDIDATE.zip`
+
+SHA-256:
+
+`87b3d0838ec6b1050e51b5914014edb824ef694c325b12107abeb89542cca2c8`
 
 ## Persistent translation rules
 
 - Write natural Chinese syntax. Do not preserve Japanese word order when it produces Japanese-style Chinese.
-- When the original distinguishes a game function/keyword only through blue highlighting, preserve that distinction through blue highlighting in Chinese. Do **not** invent quotation marks, book-title marks, parentheses, or other emphasis punctuation that is absent from the source.
+- When the original distinguishes a game function/keyword through blue highlighting, preserve that distinction through blue highlighting in Chinese.
+- Do **not** invent quotation marks, book-title marks, parentheses, or other emphasis punctuation absent from the source merely to emphasize a game function.
 - Missing, extra, or semantically incorrect blue highlighting is QC FAIL.
-- Chinese line width is not required to match Japanese line width. Match font height, baseline/vertical center, line spacing, hierarchy, alignment, safe area, and final game-space aspect ratio.
-- Special key notation keeps no literal spaces outside the brackets; breathing room goes inside: `按【 L 】键`, `按【 R 】键`.
-- Baked Simplified-Chinese tutorial text must explicitly select the Simplified-Chinese localized font face. For the current Noto CJK TTC files, index `2` is SC; default/index `0` is JP and is prohibited for Chinese baked text.
-
-## Mandatory layout-measurement rule for this component
-
-Before rendering a candidate, measure the original Japanese raster itself. Do not begin from visually guessed Y coordinates.
-
-For every title, body paragraph, and info6 command panel:
-
-1. derive the original visible glyph band from original-vs-clean-plate pixel evidence;
-2. record top/bottom, visible height, line center, and adjacent line-center spacing;
-3. measure each typography tier independently;
-4. render Chinese with a shared baseline/line model;
-5. compare original vs Chinese in measured Vita screen geometry using strict overlay and line guides;
-6. reject any candidate rendered before this evidence exists.
-
-A broad 50% page overlay by itself is not sufficient. The source-line measurements must drive the layout.
+- Chinese line width is not required to match Japanese line width. Match font height, line center/baseline, line spacing, hierarchy, alignment, safe area and final game-space aspect ratio.
+- Special key notation uses no literal spaces outside the brackets; breathing room goes inside: `按【 L 】键`, `按【 R 】键`.
+- Baked Simplified-Chinese text must explicitly use the Simplified-Chinese localized font face. For Noto CJK TTC files, index `2` is SC; default/index `0` is JP and is prohibited.
+- Overlay + line spacing is the **only accepted layout solver** for these baked tutorial pages. See `docs/CRITICAL_OVERLAY_LINE_SPACING_LAYOUT_RULE.md`.
 
 ## info3 — 旗舰提督室 说明
 
@@ -37,6 +32,7 @@ A broad 50% page overlay by itself is not sufficient. The source-line measuremen
 3. `也可通过补给、入渠和改装来强化舰娘。`
 
 Blue semantic keywords:
+
 - `旗舰提督室`
 - `编成`
 - `工厂`
@@ -53,6 +49,7 @@ Blue semantic keywords:
 3. `请通过记录进行战况的保存。`
 
 Blue semantic keywords:
+
 - `【 L 】`
 - `图鉴`
 - `家具店`
@@ -62,20 +59,21 @@ Do not add quotation marks around `记录`.
 
 ## info4 — 编成界面 说明
 
-The first paragraph and second paragraph use different original font sizes. Preserve this hierarchy; do not redraw both paragraphs at one common size.
+The first and second paragraphs use different source typography sizes and must remain two distinct tiers.
 
-### Paragraph 1 — larger body size
+### Paragraph 1 — larger body tier
 
 1. `在编成界面中，可将舰娘编入舰队或进行替换。`
 2. `在每支舰队中，可编入最多六支舰娘。`
 
 Blue semantic keywords:
+
 - `编成`
 - `最多六支`
 
 `最多六支` intentionally mirrors the semantic emphasis of original `最大六隻`.
 
-### Paragraph 2 — smaller body size
+### Paragraph 2 — smaller body tier
 
 1. `根据舰队编成，出击时的航线有时会发生较大变化。`
 2. `若无法顺利攻略作战海域，除了提升舰队练度、`
@@ -83,12 +81,13 @@ Blue semantic keywords:
 4. `尤其是驱逐舰为主力的水雷战队，由1艘轻巡洋舰担任旗舰会更有效。`
 
 Blue semantic keywords:
+
 - `航线`
 - `水雷战队`
 
 ### Ship-category list
 
-The right-side Japanese ship-category list is intentionally preserved exactly as original. Do not clean, translate, redraw, or otherwise modify it in this component.
+The right-side Japanese ship-category list is intentionally preserved exactly as original. Do not clean, translate, redraw or otherwise modify it in this component.
 
 ## info5 — 战斗指挥输入 说明
 
@@ -97,29 +96,32 @@ The right-side Japanese ship-category list is intentionally preserved exactly as
 3. `将战斗指挥指令编入战斗指挥框后，即可进行指挥输入。`
 
 Blue semantic keyword:
+
 - `战斗指挥指令`
 
-The glyph `将` must render with a Simplified-Chinese localized form; a Japanese localized glyph shape is QC FAIL.
+The glyph `将` must render with a Simplified-Chinese localized form. A Japanese-localized glyph shape is QC FAIL.
 
 ## info6 — 战斗指挥输入 说明
 
-### Nine command panels
+### Nine command panels — final copy
 
-Command name and explanation use different original font sizes. Preserve the hierarchy: command name is larger/cyan, explanation is smaller/white.
-
-| Command name (cyan) | Explanation (white) |
+| Visual command | Explanation |
 | --- | --- |
-| `接近` | `逼近敌方舰队。` |
-| `脱离` | `尝试脱离战斗海域。` |
-| `航空攻击` | `实施舰载机航空攻击。` |
-| `炮击` | `展开炮击战。` |
-| `对潜攻击` | `实施爆雷攻击。` |
-| `突击（接近＋炮击）` | `一边炮击，一边逼近敌舰。` |
-| `雷击` | `展开鱼雷战。` |
-| `回避` | `实施回避机动。` |
-| `统射（统制射击）` | `实施电探统制射击。` |
+| large `接近` | `逼近敌方舰队。` |
+| large `脱离` | `尝试脱离战斗海域。` |
+| large `航空` + small `攻击` | `实施舰载机航空攻击。` |
+| large `炮击` | `展开炮击战。` |
+| large `对潜` + small `攻击` | `实施爆雷攻击。` |
+| large `突击` + small `（接近＋炮击）` | `一边炮击，一边逼近敌舰。` |
+| large `雷击` | `展开鱼雷战。` |
+| large `回避` | `实施回避机动。` |
+| large `统射` + small `（统制射击）` | `实施电探统制射击。` |
 
-Do not change the final explanation to `电探控制射击`; the locked wording is `实施电探统制射击。`.
+The hierarchy itself is part of the translation spec. `攻击` after both `航空` and `对潜` is the secondary smaller cyan tier.
+
+Do not change the final `统射` explanation to `电探控制射击`; the locked wording is:
+
+`实施电探统制射击。`
 
 ### Body paragraph 1
 
@@ -127,6 +129,7 @@ Do not change the final explanation to `电探控制射击`; the locked wording 
 2. `可使用的战斗指挥指令，也会根据舰队编成和装备等发生变化。`
 
 Blue semantic keywords:
+
 - `旗舰练度`
 - `战斗指挥指令`
 
@@ -139,6 +142,7 @@ Blue semantic keywords:
 5. `根据舰队编成、配置顺序和指挥输入，战斗内容也会发生变化。`
 
 Blue semantic keywords:
+
 - `雷击`
 - `对潜`
 - `航空攻击`
@@ -146,19 +150,32 @@ Blue semantic keywords:
 
 The parenthetical explanations `（鱼雷攻击）` and `（爆雷）` remain white, matching the source semantic highlighting.
 
-## Rendering direction
+## Final rendering direction
 
-Render info3–6 using the accepted M001 info1/info2 visual path wherever compatible, but only after exact original typography measurements are recorded:
+The accepted V6 implementation uses the M001 info1/info2 visual principles, with original-page pixel measurements driving every placement decision:
 
-- measured source-to-Vita non-uniform transform;
-- explicit Simplified-Chinese localized font face;
-- natural Chinese width;
-- SS8 text-layer rasterization;
-- one Lanczos mapping/downsample into 1024×512 source-space;
-- RGBA32 visual path instead of BC3 where the final Texture2D conversion is adopted;
-- same white/cyan palette and outline logic as M001;
-- strict original-vs-Chinese typography QC driven by actual source-pixel line bands, including title hierarchy, font height, vertical centers/baselines, line-center spacing, safe area, and explicit blue-highlight map.
+- measured source-to-Vita non-uniform transform
+- original bright-core bboxes and line-center spacing as layout constraints
+- explicit Noto Sans CJK SC face, TTC index 2
+- natural Chinese width
+- SS8 text-layer rasterization
+- one Lanczos source-space mapping/downsample
+- RGBA32 Texture2D storage rather than BC3
+- same white/cyan/outline family as the accepted tutorial style
+- strict original-vs-Chinese overlay + line-spacing convergence
+- explicit blue-highlight segment map
 
-The previous V2 render is not an accepted layout baseline because it used manually approximated line bands and the default Japanese TTC face. It must not be packaged or reused as-is.
+Do not recreate these pages from V2/V3/V4/V4.1. V6 is the accepted final visual state.
 
-Current render work remains visual-candidate only until exact asset writeback and PSV Vita hardware validation are completed.
+## Hardware result
+
+The exact V6 asset writeback passed PSV Vita hardware testing on 2026-08-28.
+
+Final cumulative `resources.assets` for this tested branch:
+
+- Mother SHA-256: `cb8cdd0e872aa22ab603e5b2be2bba78219cd8d54450f96bc9107bbdc5b1d50a`
+- Mother size: `1,283,402,344`
+- Output SHA-256: `20e0a0232c96eeba213fe09f65e3f1742302e50eec6fcb777e4952ad07c79311`
+- Output size: `1,290,218,052`
+
+The Mother already contained parallel work from another chat. All non-target serialized objects were preserved byte-for-byte, so this hardware result does **not** supersede or renumber that parallel M003 work.
